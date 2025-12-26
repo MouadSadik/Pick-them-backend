@@ -8,11 +8,11 @@
         <version>3.5.7</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.sadik</groupId>
-    <artifactId>jwt_security</artifactId>
+    <groupId>com.cigi</groupId>
+    <artifactId>pick_them</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>jwt_security</name>
-    <description>jwt_security</description>
+    <name>pick_them</name>
+    <description>pick_them</description>
     <url/>
     <licenses>
         <license/>

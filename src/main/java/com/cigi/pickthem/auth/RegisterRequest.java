@@ -1,6 +1,7 @@
 package com.cigi.pickthem.auth;
 
 
+import com.cigi.pickthem.domain.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,4 +20,6 @@ public class RegisterRequest {
     private String email;
 
     private String password;
+
+    private Role role;
 }

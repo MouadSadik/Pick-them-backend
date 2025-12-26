@@ -1,9 +1,8 @@
 package com.cigi.pickthem.auth;
 
 import com.cigi.pickthem.config.JwtService;
-import com.cigi.pickthem.user.Role;
-import com.cigi.pickthem.user.User;
-import com.cigi.pickthem.user.UserRepository;
+import com.cigi.pickthem.domain.entities.UserEntity;
+import com.cigi.pickthem.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,12 +28,12 @@ public class AuthenticationService {
             throw new RuntimeException("Email already exists");
         }
 
-        var user = User.builder()
+        var user = UserEntity.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
+                .role(request.getRole())
                 .build();
         userRepository.save(user);
 

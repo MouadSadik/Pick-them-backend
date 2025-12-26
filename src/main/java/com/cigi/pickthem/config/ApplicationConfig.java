@@ -1,6 +1,6 @@
 package com.cigi.pickthem.config;
 
-import com.cigi.pickthem.user.UserRepository;
+import com.cigi.pickthem.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

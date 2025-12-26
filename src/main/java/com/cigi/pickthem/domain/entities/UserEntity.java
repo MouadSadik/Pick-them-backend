@@ -1,5 +1,6 @@
-package com.cigi.pickthem.user;
+package com.cigi.pickthem.domain.entities;
 
+import com.cigi.pickthem.domain.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
-public class User implements UserDetails {
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue

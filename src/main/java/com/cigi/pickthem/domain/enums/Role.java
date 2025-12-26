@@ -1,4 +1,4 @@
-package com.cigi.pickthem.user;
+package com.cigi.pickthem.domain.enums;
 
 public enum Role {
     USER,
