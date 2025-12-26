@@ -1,0 +1,40 @@
+services:
+  db:
+    container_name: pick-postgres
+    image: postgres:16
+    environment:
+      POSTGRES_DB: pick_them
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  backend:
+    container_name: spring-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pick_them
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db:
