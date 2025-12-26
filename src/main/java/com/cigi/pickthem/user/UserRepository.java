@@ -1,4 +1,4 @@
-package com.sadik.jwt_security.user;
+package com.cigi.pickthem.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

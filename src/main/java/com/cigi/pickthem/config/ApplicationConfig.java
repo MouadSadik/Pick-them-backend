@@ -1,6 +1,6 @@
-package com.sadik.jwt_security.config;
+package com.cigi.pickthem.config;
 
-import com.sadik.jwt_security.user.UserRepository;
+import com.cigi.pickthem.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private UserRepository repository;
+    private final UserRepository repository;
 
     @Bean
     public UserDetailsService userDetailsService() {

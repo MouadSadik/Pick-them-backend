@@ -1,4 +1,4 @@
-package com.sadik.jwt_security.user;
+package com.cigi.pickthem.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

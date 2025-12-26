@@ -1,13 +1,13 @@
-package com.sadik.jwt_security;
+package com.cigi.pickthem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class JwtSecurityApplication {
+public class PickThemApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(JwtSecurityApplication.class, args);
+        SpringApplication.run(PickThemApplication.class, args);
     }
 
 }

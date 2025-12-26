@@ -1,4 +1,4 @@
-package com.sadik.jwt_security.config;
+package com.cigi.pickthem.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

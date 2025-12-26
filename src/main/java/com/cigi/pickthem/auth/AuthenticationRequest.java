@@ -1,5 +1,4 @@
-package com.sadik.jwt_security.auth;
-
+package com.cigi.pickthem.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,11 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegisterRequest {
-
-    private String firstname;
-
-    private String lastname;
+public class AuthenticationRequest {
 
     private String email;
 
