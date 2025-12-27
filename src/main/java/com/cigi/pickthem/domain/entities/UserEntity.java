@@ -71,4 +71,16 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public boolean isAdmin(){
+        return this.role == Role.ADMIN;
+    }
+
+    public void addPoints(int points) {
+        this.totalPoints += points;
+    }
+
+    public void resetPoints() {
+        this.totalPoints = 0;
+    }
 }
