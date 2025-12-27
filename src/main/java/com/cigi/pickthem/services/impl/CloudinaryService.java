@@ -30,4 +30,10 @@ public class CloudinaryService {
             throw new RuntimeException("Image upload failed", e);
         }
     }
+
+    public boolean deleteImage(String publicId) throws Exception {
+        Map result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+        // Cloudinary returns {"result":"ok"} if deleted
+        return "ok".equals(result.get("result"));
+    }
 }
