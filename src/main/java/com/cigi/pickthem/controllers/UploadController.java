@@ -1,6 +1,7 @@
 package com.cigi.pickthem.controllers;
 
 
+import com.cigi.pickthem.exception.UnauthorizedException;
 import com.cigi.pickthem.services.impl.CloudinaryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
