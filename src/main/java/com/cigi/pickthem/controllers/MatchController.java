@@ -1,4 +1,4 @@
-package com.cigi.pickthem.controller;
+package com.cigi.pickthem.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
