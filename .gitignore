@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+# Ignorer les fichiers de configuration sensibles
+pom.xml
+application.properties
