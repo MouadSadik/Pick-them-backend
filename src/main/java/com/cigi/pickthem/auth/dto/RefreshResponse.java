@@ -1,4 +1,4 @@
-package com.cigi.pickthem.auth;
+package com.cigi.pickthem.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AuthenticationRequest {
-
-    private String email;
-
-    private String password;
+public class RefreshResponse {
+    private String message;
+    private String accessToken;
+    private UserResponse user;
 }

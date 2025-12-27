@@ -3,15 +3,20 @@ package com.cigi.pickthem.auth;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.cigi.pickthem.exception.BadRequestException;
-import com.cigi.pickthem.exception.NotFoundException;
-import com.cigi.pickthem.exception.UnauthorizedException;
+import com.cigi.pickthem.auth.dto.LoginRequest;
+import com.cigi.pickthem.auth.dto.LoginResponse;
+import com.cigi.pickthem.auth.dto.LogoutResponse;
+import com.cigi.pickthem.auth.dto.RefreshResponse;
+import com.cigi.pickthem.auth.dto.RegisterRequest;
+import com.cigi.pickthem.auth.dto.RegisterResponse;
 
 import java.util.Arrays;
 
@@ -23,30 +28,17 @@ public class AuthenticationController {
     private final AuthenticationService service;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request,
-            HttpServletResponse response) {
-
-        AuthenticationResponse authResponse = service.register(request);
-
-        // Générer le refresh token
-        var user = service.getUserByEmail(request.getEmail());
-        String refreshToken = service.generateRefreshToken(user);
-
-        // Stocker le refresh token dans un cookie HttpOnly
-        ResponseCookie refreshCookie = buildRefreshTokenCookie(refreshToken);
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
-
-        // Retourner seulement l'access token dans le body
-        return ResponseEntity.ok(authResponse);
+    public ResponseEntity<RegisterResponse> register(
+            @Valid @RequestBody RegisterRequest request) {
+        RegisterResponse response = service.register(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request,
+    public ResponseEntity<LoginResponse> login(
+            @Valid @RequestBody LoginRequest request,
             HttpServletResponse response) {
-
-        AuthenticationResponse authResponse = service.authenticate(request);
+        LoginResponse loginResponse = service.login(request);
 
         // Générer le refresh token
         var user = service.getUserByEmail(request.getEmail());
@@ -56,30 +48,31 @@ public class AuthenticationController {
         ResponseCookie refreshCookie = buildRefreshTokenCookie(refreshToken);
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
-        // Retourner seulement l'access token dans le body
-        return ResponseEntity.ok(authResponse);
+        return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request) {
-        try {
-            String refreshToken = extractRefreshTokenFromCookie(request);
-            if (refreshToken == null || refreshToken.isEmpty()) {
-                throw new UnauthorizedException("Refresh token missing");
-            }
+    public ResponseEntity<RefreshResponse> refresh(
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        // Extraire l'ancien refresh token depuis le cookie
+        String oldRefreshToken = extractRefreshTokenFromCookie(request);
+        // Appel service → renvoie nouveau access token
+        RefreshResponse refreshResponse = service.refresh(oldRefreshToken);
 
-            AuthenticationResponse authResponse = service.refreshAccessToken(refreshToken);
-            return ResponseEntity.ok(authResponse);
+        // Générer un nouveau refresh token dans le controller
+        var user = service.getUserByEmail(service.getEmailFromRefreshToken(oldRefreshToken));
+        String newRefreshToken = service.generateRefreshToken(user);
 
-        } catch (NotFoundException | UnauthorizedException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new BadRequestException("refresh token invalid");
-        }
+        ResponseCookie refreshCookie = buildRefreshTokenCookie(newRefreshToken);
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+
+        // Retourner le body (RefreshResponse) sans refresh token
+        return ResponseEntity.ok(refreshResponse);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
+    public ResponseEntity<LogoutResponse> logout(HttpServletResponse response) {
 
         // Supprimer le cookie refresh token
         ResponseCookie cookie = ResponseCookie.from("refresh_token", "")
@@ -92,8 +85,11 @@ public class AuthenticationController {
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-        return ResponseEntity.ok()
-                .body("Logged out successfully");
+        LogoutResponse logoutResponse = LogoutResponse.builder()
+                .message("User logged out successfully")
+                .build();
+
+        return ResponseEntity.ok(logoutResponse);
     }
 
     private ResponseCookie buildRefreshTokenCookie(String token) {

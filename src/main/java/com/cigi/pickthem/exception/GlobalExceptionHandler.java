@@ -1,13 +1,56 @@
 package com.cigi.pickthem.exception;
 
+import java.security.SignatureException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+        @ExceptionHandler({ MalformedJwtException.class, SignatureException.class, UnsupportedJwtException.class })
+        public ResponseEntity<ApiError> handleInvalidJwt(Exception ex) {
+                ApiError error = ApiError.builder()
+                                .name("Unauthorized")
+                                .message("Invalid JWT token")
+                                .status(HttpStatus.UNAUTHORIZED.value())
+                                .statusText(HttpStatus.UNAUTHORIZED.name())
+                                .cause(ex.getMessage())
+                                .build();
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+
+        @ExceptionHandler(MethodArgumentNotValidException.class)
+        public ResponseEntity<ApiError> handleValidationException(
+                        MethodArgumentNotValidException ex) {
+                Map<String, String> fieldErrors = new HashMap<>();
+
+                ex.getBindingResult().getFieldErrors()
+                                .forEach(error -> fieldErrors.put(error.getField(), error.getDefaultMessage()));
+
+                ApiError apiError = ApiError.builder()
+                                .name("Unprocessable Entity")
+                                .message("Validation failed")
+                                .status(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                                .statusText(HttpStatus.UNPROCESSABLE_ENTITY.name())
+                                .cause(ex.getClass().getSimpleName())
+                                .data(fieldErrors)
+                                .build();
+
+                return ResponseEntity
+                                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                                .body(apiError);
+        }
 
         @ExceptionHandler(BadRequestException.class)
         public ResponseEntity<ApiError> handleBadRequest(BadRequestException ex) {
@@ -64,6 +107,18 @@ public class GlobalExceptionHandler {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
 
+        @ExceptionHandler(HttpMessageNotReadableException.class)
+        public ResponseEntity<ApiError> handleInvalidJson(HttpMessageNotReadableException ex) {
+                ApiError error = ApiError.builder()
+                                .name("Bad Request")
+                                .message("Malformed JSON request")
+                                .status(HttpStatus.BAD_REQUEST.value())
+                                .statusText(HttpStatus.BAD_REQUEST.name())
+                                .cause(ex.getMostSpecificCause().getMessage())
+                                .build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+
         @ExceptionHandler(Exception.class)
         public ResponseEntity<ApiError> handleGenericException(Exception ex) {
                 ApiError error = ApiError.builder()
@@ -75,4 +130,5 @@ public class GlobalExceptionHandler {
                                 .build();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
+
 }

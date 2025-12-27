@@ -1,5 +1,11 @@
 package com.cigi.pickthem.auth;
 
+import com.cigi.pickthem.auth.dto.LoginRequest;
+import com.cigi.pickthem.auth.dto.LoginResponse;
+import com.cigi.pickthem.auth.dto.RefreshResponse;
+import com.cigi.pickthem.auth.dto.RegisterRequest;
+import com.cigi.pickthem.auth.dto.RegisterResponse;
+import com.cigi.pickthem.auth.mapper.UserMapper;
 import com.cigi.pickthem.config.JwtService;
 import com.cigi.pickthem.domain.entities.UserEntity;
 import com.cigi.pickthem.exception.BadRequestException;
@@ -21,8 +27,9 @@ public class AuthenticationService {
         private final PasswordEncoder passwordEncoder;
         private final JwtService jwtService;
         private final AuthenticationManager authenticationManager;
+        private final UserMapper userMapper;
 
-        public AuthenticationResponse register(RegisterRequest request) {
+        public RegisterResponse register(RegisterRequest request) {
 
                 if (userRepository.findByEmail(request.getEmail()).isPresent()) {
                         throw new ConflictException("Email already exists");
@@ -34,59 +41,62 @@ public class AuthenticationService {
                                 .password(passwordEncoder.encode(request.getPassword()))
                                 .role(request.getRole())
                                 .build();
+
                 userRepository.save(user);
 
-                return generateAuthResponse(user);
+                return RegisterResponse.builder()
+                                .message("User registered successfully")
+                                .build();
         }
 
-        public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        public LoginResponse login(LoginRequest request) {
+
                 try {
                         authenticationManager.authenticate(
                                         new UsernamePasswordAuthenticationToken(
                                                         request.getEmail(),
                                                         request.getPassword()));
                 } catch (org.springframework.security.authentication.BadCredentialsException ex) {
-                        // Transformer l'erreur en 400 BadRequest
                         throw new BadRequestException("Invalid credentials");
                 }
 
                 var user = userRepository.findByEmail(request.getEmail())
                                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-                return generateAuthResponse(user);
+                String accessToken = jwtService.generateAccessToken(user);
+
+                return LoginResponse.builder()
+                                .message("Login successful")
+                                .accessToken(accessToken)
+                                .user(userMapper.toResponse(user)) // juste appeler le mapper
+                                .build();
         }
 
-        public AuthenticationResponse refreshAccessToken(String refreshToken) {
-                String userEmail = jwtService.extractUsername(refreshToken);
-
-                var user = userRepository.findByEmail(userEmail)
-                                .orElseThrow(() -> new NotFoundException("User not found"));
-
-                if (!jwtService.isValidToken(refreshToken, user)) {
-                        throw new UnauthorizedException("Invalid or expired refresh token"); // 401
+        public RefreshResponse refresh(String oldRefreshToken) {
+                if (oldRefreshToken == null || oldRefreshToken.isEmpty()) {
+                        throw new UnauthorizedException("Refresh token missing");
                 }
 
-                if (!jwtService.isRefreshToken(refreshToken)) {
-                        throw new UnauthorizedException("Token is not a refresh token"); // <-- CHANGÉ 403 → 401
+                // Vérifier et récupérer l'utilisateur
+                var userEmail = getEmailFromRefreshToken(oldRefreshToken);
+                var user = getUserByEmail(userEmail);
+
+                if (!jwtService.isValidToken(oldRefreshToken, user)) {
+                        throw new UnauthorizedException("Invalid or expired refresh token");
+                }
+
+                if (!jwtService.isRefreshToken(oldRefreshToken)) {
+                        throw new UnauthorizedException("Token is not a refresh token");
                 }
 
                 // Générer un nouveau access token
                 String newAccessToken = jwtService.generateAccessToken(user);
 
-                return AuthenticationResponse.builder()
+                // Retourner la réponse sans refresh token
+                return RefreshResponse.builder()
+                                .message("Access token refreshed")
                                 .accessToken(newAccessToken)
-                                .tokenType("Bearer")
-                                .expiresIn(jwtService.getAccessTokenValidity())
-                                .build();
-        }
-
-        private AuthenticationResponse generateAuthResponse(UserEntity user) {
-                String accessToken = jwtService.generateAccessToken(user);
-
-                return AuthenticationResponse.builder()
-                                .accessToken(accessToken)
-                                .tokenType("Bearer")
-                                .expiresIn(jwtService.getAccessTokenValidity())
+                                .user(userMapper.toResponse(user)) // directement l'appel
                                 .build();
         }
 
@@ -98,4 +108,9 @@ public class AuthenticationService {
                 return userRepository.findByEmail(email)
                                 .orElseThrow(() -> new NotFoundException("User not found"));
         }
+
+        public String getEmailFromRefreshToken(String refreshToken) {
+                return jwtService.extractUsername(refreshToken);
+        }
+
 }
