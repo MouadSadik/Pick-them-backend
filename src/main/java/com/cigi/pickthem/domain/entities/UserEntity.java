@@ -22,19 +22,20 @@ import java.util.List;
 public class UserEntity implements UserDetails {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String firstname;
+    private String username;
 
-    private String lastname;
-
+    @Column(unique = true)
     private String email;
 
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    private int totalPoints;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
