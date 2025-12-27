@@ -24,4 +24,18 @@ public class UploadController {
         String imageUrl = cloudinaryService.uploadImage(file);
         return ResponseEntity.ok(imageUrl);
     }
+
+    @DeleteMapping("/{publicId}")
+    public ResponseEntity<String> deleteImage(@PathVariable String publicId) {
+        try {
+            boolean deleted = cloudinaryService.deleteImage(publicId);
+            if (deleted) {
+                return ResponseEntity.ok("Image deleted successfully.");
+            } else {
+                return ResponseEntity.badRequest().body("Failed to delete image.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
+    }
 }
