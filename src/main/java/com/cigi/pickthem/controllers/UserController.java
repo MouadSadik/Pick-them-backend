@@ -51,4 +51,25 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+
+    @GetMapping("/{id}/points")
+    public ResponseEntity<Integer> getTotalPoints(@PathVariable("id") Long userId) {
+        int totalPoints = userService.getTotalPoints(userId);
+        return ResponseEntity.ok(totalPoints);
+    }
+
+    @PutMapping("/{id}/points")
+    public ResponseEntity<UserResponseDto> updateTotalPoints(@PathVariable("id") Long userId) {
+        UserResponseDto updatedUser = userService.updateTotalPoints(userId);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @GetMapping("/top")
+    public ResponseEntity<List<UserResponseDto>> getTopUsers(
+            @RequestParam(value = "limit", defaultValue = "10") int limit
+    ) {
+        List<UserResponseDto> topUsers = userService.getTopUsers(limit);
+        return ResponseEntity.ok(topUsers);
+    }
+
 }

@@ -3,26 +3,32 @@ package com.cigi.pickthem.services.impl;
 import com.cigi.pickthem.domain.dtos.UserRequestDto;
 import com.cigi.pickthem.domain.dtos.UserResponseDto;
 import com.cigi.pickthem.domain.dtos.UserUpdateRequestDto;
+import com.cigi.pickthem.domain.entities.PredictionEntity;
 import com.cigi.pickthem.domain.entities.UserEntity;
 import com.cigi.pickthem.exception.NotFoundException;
 import com.cigi.pickthem.mappers.impl.UserMapper;
+import com.cigi.pickthem.repositories.PredictionRepository;
 import com.cigi.pickthem.repositories.UserRepository;
 import com.cigi.pickthem.services.UserService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PredictionRepository predictionRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PredictionRepository predictionRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.predictionRepository = predictionRepository;
     }
 
     @Override
@@ -70,11 +76,39 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int getTotalPoints(Long userId) {
-        return 0;
+        List<PredictionEntity> predictions = predictionRepository.findByUserId(userId);
+
+        return predictions.stream()
+                .mapToInt(PredictionEntity::getPoints)
+                .sum();
     }
 
     @Override
-    public List<UserResponseDto> getTopUsers(int limit) {
-        return List.of();
+    @Transactional
+    public UserResponseDto updateTotalPoints(Long userId) {
+
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        int totalPoints = predictionRepository.findByUserId(userId)
+                .stream()
+                .mapToInt(PredictionEntity::getPoints)
+                .sum();
+
+        user.setTotalPoints(totalPoints);
+        userRepository.save(user);
+
+        return userMapper.toDto(user);
     }
+
+
+    @Override
+    public List<UserResponseDto> getTopUsers(int limit) {
+        return userRepository.findAll(Sort.by(Sort.Direction.DESC, "totalPoints"))
+                .stream()
+                .limit(limit)
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 }

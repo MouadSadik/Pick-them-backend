@@ -22,4 +22,6 @@ public interface UserService {
 
     List<UserResponseDto> getTopUsers(int limit);
 
+    UserResponseDto updateTotalPoints(Long userId);
+
 }
