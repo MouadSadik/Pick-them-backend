@@ -40,15 +40,12 @@ public class MatchController {
 
     @PutMapping("/{id}/result")
     public ResponseEntity<MatchDTO> enterResult(
-            @PathVariable Long id,
-            @RequestBody EnterResultRequest request
+            @PathVariable Long matchId,
+            @RequestParam int scoreA,
+            @RequestParam int scoreB
     ) {
-        MatchDTO match = matchService.enterResult(
-                id,
-                request.getScoreA(),
-                request.getScoreB()
-        );
-        return ResponseEntity.ok(match);
+        MatchDTO updatedMatch = matchService.enterResult(matchId, scoreA, scoreB);
+        return ResponseEntity.ok(updatedMatch);
     }
 
     @DeleteMapping("/delete/{id}")

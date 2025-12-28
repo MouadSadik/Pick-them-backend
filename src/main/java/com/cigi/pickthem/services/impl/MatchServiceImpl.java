@@ -2,15 +2,24 @@ package com.cigi.pickthem.services.impl;
 
 import com.cigi.pickthem.domain.DTO.MatchDTO;
 import com.cigi.pickthem.domain.entities.MatchEntity;
+import com.cigi.pickthem.domain.entities.PredictionEntity;
 import com.cigi.pickthem.domain.entities.TeamEntity;
+import com.cigi.pickthem.domain.entities.UserEntity;
 import com.cigi.pickthem.domain.enums.MatchResult;
 import com.cigi.pickthem.mappers.MatchMapper;
 import com.cigi.pickthem.repositories.MatchRepository;
+import com.cigi.pickthem.repositories.PredictionRepository;
 import com.cigi.pickthem.repositories.TeamRepository;
+import com.cigi.pickthem.repositories.UserRepository;
 import com.cigi.pickthem.services.MatchService;
+import com.cigi.pickthem.services.PredictionService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author $ {USERS}
@@ -22,6 +31,9 @@ public class MatchServiceImpl implements MatchService {
     private final MatchRepository matchRepository;
     private final TeamRepository teamRepository;
     private final MatchMapper matchMapper;
+    private final PredictionService predictionService;
+    private final UserRepository userRepository;
+    private final PredictionRepository predictionRepository;
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
@@ -76,8 +88,13 @@ public class MatchServiceImpl implements MatchService {
             match.setWinner(MatchResult.DRAW);
         }
 
-        return matchMapper.toDto(matchRepository.save(match));
+        matchRepository.save(match);
+
+        dispatchPointsForMatch(matchId);
+
+        return matchMapper.toDto(match);
     }
+
 
 
     @Override
@@ -119,6 +136,39 @@ public class MatchServiceImpl implements MatchService {
         MatchEntity match = matchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Match does not exist"));
         return matchMapper.toDto(match);
+    }
+
+
+
+    @Transactional
+    public void dispatchPointsForMatch(Long matchId) {
+
+        MatchEntity match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new RuntimeException("Match not found"));
+
+        List<PredictionEntity> predictions = predictionRepository.findByMatchId(matchId);
+
+        for (PredictionEntity prediction : predictions) {
+
+            if (prediction.isPointsDispatched()) {
+                continue; //deja traité
+            }
+
+            UserEntity user = prediction.getUser();
+
+            int points = predictionService.calculatePoints(
+                    match,
+                    prediction.getPredictedScoreA(),
+                    prediction.getPredictedScoreB(),
+                    match.getWinner()
+            );
+
+            user.addPoints(points);
+            prediction.setPointsDispatched(true);
+
+            userRepository.save(user);
+            predictionRepository.save(prediction);
+        }
     }
 
 

@@ -94,7 +94,7 @@ public class PredictionService {
     /**
      * Calcul des points d'une prédiction selon le match réel
      */
-    private int calculatePoints(MatchEntity match, Integer predictedScoreA, Integer predictedScoreB,
+    public int calculatePoints(MatchEntity match, Integer predictedScoreA, Integer predictedScoreB,
             MatchResult predictedResult) {
 
         // Score exact

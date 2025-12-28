@@ -11,7 +11,6 @@ public interface PredictionRepository extends JpaRepository<PredictionEntity, Lo
     Optional<PredictionEntity> findByUserIdAndMatchId(Long userId, Long matchId);
 
     boolean existsByUserIdAndMatchId(Integer userId, Long matchId);
+    List<PredictionEntity> findByMatchId(Long matchId);
 
-
-    List<PredictionEntity> findByUserId(Long userId);
 }
