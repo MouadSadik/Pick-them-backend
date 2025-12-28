@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// DTO pour affichage (sans password)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
