@@ -1,6 +1,7 @@
 package com.cigi.pickthem.exception;
 
 import java.security.SignatureException;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,14 +110,20 @@ public class GlobalExceptionHandler {
 
         @ExceptionHandler(HttpMessageNotReadableException.class)
         public ResponseEntity<ApiError> handleInvalidJson(HttpMessageNotReadableException ex) {
+                Map<String, String> fieldErrors = new HashMap<>();
+                Throwable cause = ex.getMostSpecificCause();
+                if (cause != null && cause.getMessage() != null) {
+                        fieldErrors.put("unknown", cause.getMessage());
+                }
                 ApiError error = ApiError.builder()
-                                .name("Bad Request")
-                                .message("Malformed JSON request")
-                                .status(HttpStatus.BAD_REQUEST.value())
-                                .statusText(HttpStatus.BAD_REQUEST.name())
-                                .cause(ex.getMostSpecificCause().getMessage())
+                                .name("Unprocessable Entity")
+                                .message("Validation failed")
+                                .status(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                                .statusText(HttpStatus.UNPROCESSABLE_ENTITY.name())
+                                .cause(ex.getClass().getSimpleName())
+                                .data(fieldErrors)
                                 .build();
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(error);
         }
 
         @ExceptionHandler(Exception.class)
