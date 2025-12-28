@@ -1,5 +1,6 @@
 package com.cigi.pickthem.domain.DTO;
 
+import com.cigi.pickthem.domain.enums.MatchResult;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,4 +16,5 @@ public class MatchDTO {
     private int pointsWinB;
     private int pointsDraw;
     private Long tourId;
+    private MatchResult matchResult;
 }

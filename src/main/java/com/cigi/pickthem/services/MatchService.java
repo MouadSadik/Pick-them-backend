@@ -13,4 +13,6 @@ public interface MatchService {
      MatchDTO enterResult(Long matchId, int scoreA, int scoreB);
      void deleteMatch(Long matchId);
      MatchDTO updateMatch(Long matchId, Long teamAId, Long teamBId, int pointsWinA, int pointsWinB, int pointsDraw);
-    }
+
+    MatchDTO getMatchById(Long id);
+}

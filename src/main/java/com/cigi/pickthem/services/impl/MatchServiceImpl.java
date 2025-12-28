@@ -3,6 +3,7 @@ package com.cigi.pickthem.services.impl;
 import com.cigi.pickthem.domain.DTO.MatchDTO;
 import com.cigi.pickthem.domain.entities.MatchEntity;
 import com.cigi.pickthem.domain.entities.TeamEntity;
+import com.cigi.pickthem.domain.enums.MatchResult;
 import com.cigi.pickthem.mappers.MatchMapper;
 import com.cigi.pickthem.repositories.MatchRepository;
 import com.cigi.pickthem.repositories.TeamRepository;
@@ -24,17 +25,27 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    public MatchDTO createMatch(Long teamAId, Long teamBId, int pointsWinA, int pointsWinB, int pointsDraw, Long tourId) {
+    public MatchDTO createMatch(
+            Long teamAId,
+            Long teamBId,
+            int pointsWinA,
+            int pointsWinB,
+            int pointsDraw,
+            Long tourId
+    ) {
+
         if (teamAId.equals(teamBId)) {
-            throw new RuntimeException("Team A and Team B must be different");
+            throw new IllegalArgumentException("Team A and Team B must be different");
         }
 
+        if (pointsWinA <= 0 || pointsWinB <= 0 || pointsDraw <= 0) {
+            throw new IllegalArgumentException("Points must be greater than zero");
+        }
         TeamEntity teamA = teamRepository.findById(teamAId)
                 .orElseThrow(() -> new RuntimeException("Team A does not exist"));
+
         TeamEntity teamB = teamRepository.findById(teamBId)
                 .orElseThrow(() -> new RuntimeException("Team B does not exist"));
-//        TourEntity tour = tourRepository.findById(tourId)
-//                .orElseThrow(() -> new RuntimeException("Tour does not exist"));
 
         MatchEntity match = MatchEntity.builder()
                 .teamA(teamA)
@@ -42,25 +53,32 @@ public class MatchServiceImpl implements MatchService {
                 .pointsWinA(pointsWinA)
                 .pointsWinB(pointsWinB)
                 .pointsDraw(pointsDraw)
-                //.tour(tour)
                 .build();
 
-        MatchEntity saved = matchRepository.save(match);
-        return matchMapper.toDto(saved);
+        return matchMapper.toDto(matchRepository.save(match));
     }
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public MatchDTO enterResult(Long matchId, int scoreA, int scoreB) {
+
         MatchEntity match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new RuntimeException("Match does not exist"));
 
         match.setScoreA(scoreA);
         match.setScoreB(scoreB);
 
-        MatchEntity updated = matchRepository.save(match);
-        return matchMapper.toDto(updated);
+        if (scoreA > scoreB) {
+            match.setWinner(MatchResult.TEAM_A);
+        } else if (scoreA < scoreB) {
+            match.setWinner(MatchResult.TEAM_B);
+        } else {
+            match.setWinner(MatchResult.DRAW);
+        }
+
+        return matchMapper.toDto(matchRepository.save(match));
     }
+
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
@@ -95,5 +113,13 @@ public class MatchServiceImpl implements MatchService {
         MatchEntity updated = matchRepository.save(match);
         return matchMapper.toDto(updated);
     }
+
+    @Override
+    public MatchDTO getMatchById(Long id) {
+        MatchEntity match = matchRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Match does not exist"));
+        return matchMapper.toDto(match);
+    }
+
 
 }

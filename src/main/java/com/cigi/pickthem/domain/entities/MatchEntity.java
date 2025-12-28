@@ -1,12 +1,11 @@
 package com.cigi.pickthem.domain.entities;
 
+import com.cigi.pickthem.domain.enums.MatchResult;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,6 +33,9 @@ public class MatchEntity {
     private int pointsWinA;
     private int pointsWinB;
     private int pointsDraw;
+    @Enumerated(EnumType.STRING)
+    private MatchResult winner;
+
 
     @ManyToOne
     @JoinColumn(name = "tour_id", nullable = false)
