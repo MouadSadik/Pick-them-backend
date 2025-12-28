@@ -1,17 +1,17 @@
-package com.cigi.pickthem.auth;
+package com.cigi.pickthem.services;
 
-import com.cigi.pickthem.auth.dto.LoginRequest;
-import com.cigi.pickthem.auth.dto.LoginResponse;
-import com.cigi.pickthem.auth.dto.RefreshResponse;
-import com.cigi.pickthem.auth.dto.RegisterRequest;
-import com.cigi.pickthem.auth.dto.RegisterResponse;
-import com.cigi.pickthem.auth.mapper.UserMapper;
 import com.cigi.pickthem.config.JwtService;
+import com.cigi.pickthem.domain.dtos.auth.LoginRequest;
+import com.cigi.pickthem.domain.dtos.auth.LoginResponse;
+import com.cigi.pickthem.domain.dtos.auth.RefreshResponse;
+import com.cigi.pickthem.domain.dtos.auth.RegisterRequest;
+import com.cigi.pickthem.domain.dtos.auth.RegisterResponse;
 import com.cigi.pickthem.domain.entities.UserEntity;
 import com.cigi.pickthem.exception.BadRequestException;
 import com.cigi.pickthem.exception.ConflictException;
 import com.cigi.pickthem.exception.NotFoundException;
 import com.cigi.pickthem.exception.UnauthorizedException;
+import com.cigi.pickthem.mappers.AuthUserMapper;
 import com.cigi.pickthem.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +27,7 @@ public class AuthenticationService {
         private final PasswordEncoder passwordEncoder;
         private final JwtService jwtService;
         private final AuthenticationManager authenticationManager;
-        private final UserMapper userMapper;
+        private final AuthUserMapper authMapper;
 
         public RegisterResponse register(RegisterRequest request) {
 
@@ -68,7 +68,7 @@ public class AuthenticationService {
                 return LoginResponse.builder()
                                 .message("Login successful")
                                 .accessToken(accessToken)
-                                .user(userMapper.toResponse(user)) // juste appeler le mapper
+                                .user(authMapper.toResponse(user)) // juste appeler le mapper
                                 .build();
         }
 
@@ -96,7 +96,7 @@ public class AuthenticationService {
                 return RefreshResponse.builder()
                                 .message("Access token refreshed")
                                 .accessToken(newAccessToken)
-                                .user(userMapper.toResponse(user)) // directement l'appel
+                                .user(authMapper.toResponse(user)) // directement l'appel
                                 .build();
         }
 

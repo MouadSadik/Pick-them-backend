@@ -1,4 +1,4 @@
-package com.cigi.pickthem.auth.dto;
+package com.cigi.pickthem.domain.dtos.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

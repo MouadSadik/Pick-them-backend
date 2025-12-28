@@ -1,4 +1,4 @@
-package com.cigi.pickthem.auth.dto;
+package com.cigi.pickthem.domain.dtos.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RefreshResponse {
-    private String message;
-    private String accessToken;
-    private UserResponse user;
+public class RefreshRequest {
+    private String refreshToken; // facultatif si on lit du cookie
 }

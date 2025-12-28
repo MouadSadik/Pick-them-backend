@@ -1,4 +1,4 @@
-package com.cigi.pickthem.auth.dto;
+package com.cigi.pickthem.domain.dtos.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

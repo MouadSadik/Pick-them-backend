@@ -1,4 +1,6 @@
-package com.cigi.pickthem.auth.dto;
+package com.cigi.pickthem.domain.dtos.auth;
+
+import com.cigi.pickthem.domain.dtos.UserResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LogoutResponse {
+public class RefreshResponse {
     private String message;
+    private String accessToken;
+    private UserResponseDto user;
 }

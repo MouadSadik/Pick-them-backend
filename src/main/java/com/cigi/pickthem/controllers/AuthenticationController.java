@@ -1,4 +1,4 @@
-package com.cigi.pickthem.auth;
+package com.cigi.pickthem.controllers;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,12 +11,13 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.cigi.pickthem.auth.dto.LoginRequest;
-import com.cigi.pickthem.auth.dto.LoginResponse;
-import com.cigi.pickthem.auth.dto.LogoutResponse;
-import com.cigi.pickthem.auth.dto.RefreshResponse;
-import com.cigi.pickthem.auth.dto.RegisterRequest;
-import com.cigi.pickthem.auth.dto.RegisterResponse;
+import com.cigi.pickthem.domain.dtos.auth.LoginRequest;
+import com.cigi.pickthem.domain.dtos.auth.LoginResponse;
+import com.cigi.pickthem.domain.dtos.auth.LogoutResponse;
+import com.cigi.pickthem.domain.dtos.auth.RefreshResponse;
+import com.cigi.pickthem.domain.dtos.auth.RegisterRequest;
+import com.cigi.pickthem.domain.dtos.auth.RegisterResponse;
+import com.cigi.pickthem.services.AuthenticationService;
 
 import java.util.Arrays;
 
