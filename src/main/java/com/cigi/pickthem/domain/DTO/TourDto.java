@@ -1,25 +1,19 @@
-package com.cigi.pickthem.domain.entities;
+package com.cigi.pickthem.domain.DTO;
 
 import com.cigi.pickthem.domain.enums.TourStatus;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Entity
-@Table(name = "tours")
-public class TourEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class TourDto {
     private Long id;
-
     private String name;
-
-    @Enumerated(EnumType.STRING)
     private TourStatus status;
 }
