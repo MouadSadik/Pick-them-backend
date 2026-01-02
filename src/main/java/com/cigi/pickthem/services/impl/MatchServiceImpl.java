@@ -1,6 +1,7 @@
 package com.cigi.pickthem.services.impl;
 
 import com.cigi.pickthem.domain.DTO.MatchDTO;
+import com.cigi.pickthem.domain.DTO.MatchWithPredectionResponse;
 import com.cigi.pickthem.domain.entities.*;
 import com.cigi.pickthem.domain.enums.MatchResult;
 import com.cigi.pickthem.exception.NotFoundException;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -169,6 +171,53 @@ public class MatchServiceImpl implements MatchService {
             predictionRepository.save(prediction);
         }
     }
+
+    @Override
+    public List<MatchDTO> getAllMatches() {
+        List<MatchEntity> matches = matchRepository.findAll();
+        List<MatchDTO> matchDTOs = new ArrayList<>();
+        for (MatchEntity match : matches) {
+            matchDTOs.add(matchMapper.toDto(match));
+        }
+        return matchDTOs;
+    }
+    @Override
+    public List<MatchWithPredectionResponse> getMatchsWithPredectionsByUser(Long userId) {
+
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        List<MatchEntity> matchs = matchRepository.findAllByUserEntity_Id(userId);
+
+        List<MatchWithPredectionResponse> responses = new ArrayList<>();
+
+        for (MatchEntity match : matchs) {
+
+            PredictionEntity prediction = predictionRepository
+                    .findByUserEntityAndMatchEntity(user, match)
+                    .orElse(null);
+
+            MatchWithPredectionResponse.MatchWithPredectionResponseBuilder builder =
+                    MatchWithPredectionResponse.builder()
+                            .matchId(match.getId())
+                            .teamAName(match.getTeamA().getName())
+                            .teamBName(match.getTeamB().getName())
+                            .pointsWinA(match.getPointsWinA())
+                            .pointsWinB(match.getPointsWinB())
+                            .pointsDraw(match.getPointsDraw());
+
+            if (prediction != null) {
+                builder
+                        .predictedScoreA(prediction.getPredictedScoreA())
+                        .predictedScoreB(prediction.getPredictedScoreB());
+            }
+
+            responses.add(builder.build());
+        }
+
+        return responses;
+    }
+
 
 
 }

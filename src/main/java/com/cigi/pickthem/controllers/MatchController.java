@@ -3,11 +3,14 @@ package com.cigi.pickthem.controllers;
 import com.cigi.pickthem.domain.DTO.CreateMatchRequest;
 import com.cigi.pickthem.domain.DTO.EnterResultRequest;
 import com.cigi.pickthem.domain.DTO.MatchDTO;
+import com.cigi.pickthem.domain.DTO.MatchWithPredectionResponse;
 import com.cigi.pickthem.services.MatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/matches")
@@ -51,5 +54,17 @@ public class MatchController {
     public ResponseEntity<Void> deleteMatch(@PathVariable Long id) {
         matchService.deleteMatch(id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/allMatch")
+    public ResponseEntity<List<MatchDTO>> getAllMatches() {
+        return ResponseEntity.ok(matchService.getAllMatches());
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<MatchWithPredectionResponse>> getMatchesWithPredictions(
+            @PathVariable Long userId
+    ) {
+        List<MatchWithPredectionResponse> matches = matchService.getMatchsWithPredectionsByUser(userId);
+        return ResponseEntity.ok(matches);
     }
 }

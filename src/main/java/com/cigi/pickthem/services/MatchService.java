@@ -1,6 +1,7 @@
 package com.cigi.pickthem.services;
 
 import com.cigi.pickthem.domain.DTO.MatchDTO;
+import com.cigi.pickthem.domain.DTO.MatchWithPredectionResponse;
 import com.cigi.pickthem.domain.entities.MatchEntity;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface MatchService {
      MatchDTO updateMatch(Long matchId, Long teamAId, Long teamBId, int pointsWinA, int pointsWinB, int pointsDraw);
 
     MatchDTO getMatchById(Long id);
+    List<MatchDTO> getAllMatches();
+    List<MatchWithPredectionResponse> getMatchsWithPredectionsByUser(Long userId);
 }

@@ -4,8 +4,11 @@ import com.cigi.pickthem.domain.entities.MatchEntity;
 import com.cigi.pickthem.domain.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * @author $ {USERS}
  **/
 public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
+    List<MatchEntity> findAllByUserEntity_Id(Long id);
 }
