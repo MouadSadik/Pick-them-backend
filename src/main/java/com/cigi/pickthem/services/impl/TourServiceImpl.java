@@ -21,7 +21,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public TourDto createTour(TourDto tourDto) {
-        // Conversion DTO -> Entity
+        // Conversion DTO A l'Entity
         TourEntity tourEntity = tourMapper.toEntity(tourDto);
 
         TourEntity savedTour = tourRepository.save(tourEntity);
