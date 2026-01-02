@@ -28,6 +28,7 @@ public class TourController {
     }
 
     @PostMapping
+    // @Valid est CRUCIAL ici. Sans lui, les annotations @NotBlank du DTO sont ignorees.
     public ResponseEntity<TourDto> createTour(@Valid @RequestBody TourDto tourDto) {
         TourDto createdTour = tourService.createTour(tourDto);
         return new ResponseEntity<>(createdTour, HttpStatus.CREATED);
