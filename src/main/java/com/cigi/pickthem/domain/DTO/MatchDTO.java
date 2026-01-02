@@ -16,5 +16,6 @@ public class MatchDTO {
     private int pointsWinB;
     private int pointsDraw;
     private Long tourId;
-    private MatchResult matchResult;
+    private MatchResult winner;
+
 }

@@ -2,6 +2,7 @@ package com.cigi.pickthem.services.impl;
 
 import com.cigi.pickthem.domain.DTO.TeamDTO;
 import com.cigi.pickthem.domain.entities.TeamEntity;
+import com.cigi.pickthem.exception.NotFoundException;
 import com.cigi.pickthem.mappers.TeamMapper;
 import com.cigi.pickthem.repositories.TeamRepository;
 import com.cigi.pickthem.services.TeamService;
@@ -34,13 +35,13 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public TeamDTO getTeamById(Long id) {
         TeamEntity team = teamRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Team not found"));
+                .orElseThrow(() -> new NotFoundException("Team not found"));
         return teamMapper.toDTO(team);
     }
     @Override
     public TeamDTO updateTeam(Long id, TeamDTO teamDTO) {
         TeamEntity existing = teamRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Team not found"));
+                .orElseThrow(() -> new NotFoundException("Team not found"));
 
         existing.setName(teamDTO.getName());
         existing.setImageUrl(teamDTO.getImageUrl());

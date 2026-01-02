@@ -1,16 +1,11 @@
 package com.cigi.pickthem.services.impl;
 
 import com.cigi.pickthem.domain.DTO.MatchDTO;
-import com.cigi.pickthem.domain.entities.MatchEntity;
-import com.cigi.pickthem.domain.entities.PredictionEntity;
-import com.cigi.pickthem.domain.entities.TeamEntity;
-import com.cigi.pickthem.domain.entities.UserEntity;
+import com.cigi.pickthem.domain.entities.*;
 import com.cigi.pickthem.domain.enums.MatchResult;
+import com.cigi.pickthem.exception.NotFoundException;
 import com.cigi.pickthem.mappers.MatchMapper;
-import com.cigi.pickthem.repositories.MatchRepository;
-import com.cigi.pickthem.repositories.PredictionRepository;
-import com.cigi.pickthem.repositories.TeamRepository;
-import com.cigi.pickthem.repositories.UserRepository;
+import com.cigi.pickthem.repositories.*;
 import com.cigi.pickthem.services.MatchService;
 import com.cigi.pickthem.services.PredictionService;
 import jakarta.transaction.Transactional;
@@ -34,6 +29,7 @@ public class MatchServiceImpl implements MatchService {
     private final PredictionService predictionService;
     private final UserRepository userRepository;
     private final PredictionRepository predictionRepository;
+    private final TourRepository tourRepository;
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
@@ -54,10 +50,13 @@ public class MatchServiceImpl implements MatchService {
             throw new IllegalArgumentException("Points must be greater than zero");
         }
         TeamEntity teamA = teamRepository.findById(teamAId)
-                .orElseThrow(() -> new RuntimeException("Team A does not exist"));
+                .orElseThrow(() -> new NotFoundException("Team A does not found"));
 
         TeamEntity teamB = teamRepository.findById(teamBId)
-                .orElseThrow(() -> new RuntimeException("Team B does not exist"));
+                .orElseThrow(() -> new NotFoundException("Team B does not found"));
+        TourEntity tour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new NotFoundException("Tour not found"));
+
 
         MatchEntity match = MatchEntity.builder()
                 .teamA(teamA)
@@ -65,6 +64,7 @@ public class MatchServiceImpl implements MatchService {
                 .pointsWinA(pointsWinA)
                 .pointsWinB(pointsWinB)
                 .pointsDraw(pointsDraw)
+                .tour(tour)
                 .build();
 
         return matchMapper.toDto(matchRepository.save(match));
@@ -75,7 +75,7 @@ public class MatchServiceImpl implements MatchService {
     public MatchDTO enterResult(Long matchId, int scoreA, int scoreB) {
 
         MatchEntity match = matchRepository.findById(matchId)
-                .orElseThrow(() -> new RuntimeException("Match does not exist"));
+                .orElseThrow(() -> new  NotFoundException("Match not found"));
 
         match.setScoreA(scoreA);
         match.setScoreB(scoreB);
@@ -101,7 +101,7 @@ public class MatchServiceImpl implements MatchService {
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteMatch(Long matchId) {
         MatchEntity match = matchRepository.findById(matchId)
-                .orElseThrow(() -> new RuntimeException("Match does not exist"));
+                .orElseThrow(() -> new NotFoundException("Match does not found"));
 
         matchRepository.delete(match);
     }
@@ -114,12 +114,12 @@ public class MatchServiceImpl implements MatchService {
         }
 
         MatchEntity match = matchRepository.findById(matchId)
-                .orElseThrow(() -> new RuntimeException("Match does not exist"));
+                .orElseThrow(() -> new NotFoundException("Match does not found"));
 
         TeamEntity teamA = teamRepository.findById(teamAId)
-                .orElseThrow(() -> new RuntimeException("Team A does not exist"));
+                .orElseThrow(() -> new NotFoundException("Team A does not found"));
         TeamEntity teamB = teamRepository.findById(teamBId)
-                .orElseThrow(() -> new RuntimeException("Team B does not exist"));
+                .orElseThrow(() -> new NotFoundException("Team B does not found"));
 
         match.setTeamA(teamA);
         match.setTeamB(teamB);
@@ -134,7 +134,7 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public MatchDTO getMatchById(Long id) {
         MatchEntity match = matchRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Match does not exist"));
+                .orElseThrow(() -> new NotFoundException("Match does not found"));
         return matchMapper.toDto(match);
     }
 
@@ -144,12 +144,11 @@ public class MatchServiceImpl implements MatchService {
     public void dispatchPointsForMatch(Long matchId) {
 
         MatchEntity match = matchRepository.findById(matchId)
-                .orElseThrow(() -> new RuntimeException("Match not found"));
+                .orElseThrow(() -> new NotFoundException("Match not found"));
 
         List<PredictionEntity> predictions = predictionRepository.findByMatchId(matchId);
 
         for (PredictionEntity prediction : predictions) {
-
             if (prediction.isPointsDispatched()) {
                 continue; //deja traité
             }
