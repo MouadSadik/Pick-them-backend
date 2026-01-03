@@ -39,7 +39,8 @@ public class PredictionService {
                 .predictedScoreA(dto.getPredictedScoreA())
                 .predictedScoreB(dto.getPredictedScoreB())
                 .predictedResult(predictedResult)
-                .points(points)
+                .points(null)
+                .calculatedForResult(null)
                 .build();
 
         return predictionRepository.save(prediction);
@@ -94,11 +95,20 @@ public class PredictionService {
     /**
      * Calcul des points d'une prédiction selon le match réel
      */
-    public int calculatePoints(MatchEntity match, Integer predictedScoreA, Integer predictedScoreB,
-            MatchResult predictedResult) {
+    public int calculatePoints(
+            MatchEntity match,
+            Integer predictedScoreA,
+            Integer predictedScoreB,
+            MatchResult predictedResult
+    ) {
 
-        // Score exact
-        if (predictedScoreA.equals(match.getScoreA()) && predictedScoreB.equals(match.getScoreB())) {
+        if (!predictedResult.equals(match.getWinner())) {
+            return 0;
+        }
+
+        if (predictedScoreA.equals(match.getScoreA())
+                && predictedScoreB.equals(match.getScoreB())) {
+
             if (predictedResult == MatchResult.TEAM_A) {
                 return match.getPointsWinA() * 2;
             } else if (predictedResult == MatchResult.TEAM_B) {
@@ -115,7 +125,7 @@ public class PredictionService {
         } else {
             return match.getPointsDraw();
         }
-
     }
+
 
 }

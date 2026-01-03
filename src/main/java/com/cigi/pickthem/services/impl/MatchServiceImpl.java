@@ -156,13 +156,15 @@ public class MatchServiceImpl implements MatchService {
 
             if (prediction.getPoints() != null) {
                 user.addPoints(-prediction.getPoints());
+                //user.setTotalPoints(user.getTotalPoints()-prediction.getPoints());
             }
 
             int points = predictionService.calculatePoints(
                     match,
                     prediction.getPredictedScoreA(),
                     prediction.getPredictedScoreB(),
-                    match.getWinner()
+//                    match.getWinner()
+                    prediction.getPredictedResult()
             );
 
             user.addPoints(points);
