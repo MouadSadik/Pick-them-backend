@@ -1,5 +1,6 @@
 package com.cigi.pickthem.domain.DTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,6 +9,7 @@ import lombok.Data;
  **/
 @Builder
 @Data
+@AllArgsConstructor
 public class MatchWithPredectionResponse {
     private Long matchId;
     private Integer predictedScoreA;
@@ -17,5 +19,5 @@ public class MatchWithPredectionResponse {
     private int pointsWinA;
     private int pointsWinB;
     private int pointsDraw;
-    private Long tourId;
+    private String nameTour;
 }

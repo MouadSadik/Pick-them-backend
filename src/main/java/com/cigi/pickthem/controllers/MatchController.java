@@ -44,7 +44,7 @@ public class MatchController {
     @PutMapping("/{id}/result")
     public ResponseEntity<MatchDTO> enterResult(
             @PathVariable("id") Long matchId,
-           @RequestBody EnterResultRequest request
+            @RequestBody EnterResultRequest request
     ) {
         MatchDTO updatedMatch = matchService.enterResult(matchId, request.getScoreA(), request.getScoreB());
         return ResponseEntity.ok(updatedMatch);
@@ -55,15 +55,21 @@ public class MatchController {
         matchService.deleteMatch(id);
         return ResponseEntity.noContent().build();
     }
+
     @GetMapping("/allMatch")
     public ResponseEntity<List<MatchDTO>> getAllMatches() {
         return ResponseEntity.ok(matchService.getAllMatches());
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<MatchWithPredectionResponse>> getMatchesWithPredictions(
-            @PathVariable Long userId
-    ) {
+    //    @GetMapping("/user/{userId}")
+//    public ResponseEntity<List<MatchWithPredectionResponse>> getMatchesWithPredictions(
+//            @PathVariable Long userId
+//    ) {
+//        List<MatchWithPredectionResponse> matches = matchService.getMatchsWithPredectionsByUser(userId);
+//        return ResponseEntity.ok(matches);
+//    }
+    @GetMapping("/my-predictions/{userId}")
+    public ResponseEntity<List<MatchWithPredectionResponse>> getMatchesByUser(@PathVariable Long userId) {
         List<MatchWithPredectionResponse> matches = matchService.getMatchsWithPredectionsByUser(userId);
         return ResponseEntity.ok(matches);
     }

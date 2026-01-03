@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -35,7 +37,8 @@ public class MatchEntity {
     private int pointsDraw;
     @Enumerated(EnumType.STRING)
     private MatchResult winner;
-
+    @OneToMany(mappedBy = "match" , cascade = CascadeType.ALL)
+    private List<PredictionEntity> predictions;
 
     @ManyToOne
     @JoinColumn(name = "tour_id", nullable = false)

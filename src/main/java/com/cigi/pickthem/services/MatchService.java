@@ -17,5 +17,6 @@ public interface MatchService {
 
     MatchDTO getMatchById(Long id);
     List<MatchDTO> getAllMatches();
-    List<MatchWithPredectionResponse> getMatchsWithPredectionsByUser(Long userId);
-}
+    //List<MatchWithPredectionResponse> getMatchsWithPredectionsByUser(Long userId);
+    public List<MatchWithPredectionResponse> getMatchsWithPredectionsByUser(Long userId);
+    }

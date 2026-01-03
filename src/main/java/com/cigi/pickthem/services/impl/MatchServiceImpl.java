@@ -75,20 +75,15 @@ public class MatchServiceImpl implements MatchService {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public MatchDTO enterResult(Long matchId, int scoreA, int scoreB) {
-
         MatchEntity match = matchRepository.findById(matchId)
-                .orElseThrow(() -> new  NotFoundException("Match not found"));
+                .orElseThrow(() -> new NotFoundException("Match not found"));
 
         match.setScoreA(scoreA);
         match.setScoreB(scoreB);
 
-        if (scoreA > scoreB) {
-            match.setWinner(MatchResult.TEAM_A);
-        } else if (scoreA < scoreB) {
-            match.setWinner(MatchResult.TEAM_B);
-        } else {
-            match.setWinner(MatchResult.DRAW);
-        }
+        if (scoreA > scoreB) match.setWinner(MatchResult.TEAM_A);
+        else if (scoreA < scoreB) match.setWinner(MatchResult.TEAM_B);
+        else match.setWinner(MatchResult.DRAW);
 
         matchRepository.save(match);
 
@@ -96,7 +91,6 @@ public class MatchServiceImpl implements MatchService {
 
         return matchMapper.toDto(match);
     }
-
 
 
     @Override
@@ -148,14 +142,21 @@ public class MatchServiceImpl implements MatchService {
         MatchEntity match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new NotFoundException("Match not found"));
 
+        if (match.getWinner() == null) return;
+
         List<PredictionEntity> predictions = predictionRepository.findByMatchId(matchId);
 
         for (PredictionEntity prediction : predictions) {
-            if (prediction.isPointsDispatched()) {
-                continue; //deja traité
+
+            if (match.getWinner().equals(prediction.getCalculatedForResult())) {
+                continue;
             }
 
             UserEntity user = prediction.getUser();
+
+            if (prediction.getPoints() != null) {
+                user.addPoints(-prediction.getPoints());
+            }
 
             int points = predictionService.calculatePoints(
                     match,
@@ -165,12 +166,19 @@ public class MatchServiceImpl implements MatchService {
             );
 
             user.addPoints(points);
-            prediction.setPointsDispatched(true);
+
+            prediction.setPoints(points);
+            prediction.setCalculatedForResult(match.getWinner());
 
             userRepository.save(user);
             predictionRepository.save(prediction);
         }
+
+        userRepository.flush();
+        predictionRepository.flush();
     }
+
+
 
     @Override
     public List<MatchDTO> getAllMatches() {
@@ -181,43 +189,52 @@ public class MatchServiceImpl implements MatchService {
         }
         return matchDTOs;
     }
+//    @Override
+//    public List<MatchWithPredectionResponse> getMatchsWithPredectionsByUser(Long userId) {
+//
+//        UserEntity user = userRepository.findById(userId)
+//                .orElseThrow(() -> new NotFoundException("User not found"));
+//
+//        List<MatchEntity> matchs = matchRepository.findAllByUserEntity_Id(userId);
+//
+//        List<MatchWithPredectionResponse> responses = new ArrayList<>();
+//
+//        for (MatchEntity match : matchs) {
+//
+//            PredictionEntity prediction = predictionRepository
+//                    .findByUserEntityAndMatchEntity(user, match)
+//                    .orElse(null);
+//
+//            MatchWithPredectionResponse.MatchWithPredectionResponseBuilder builder =
+//                    MatchWithPredectionResponse.builder()
+//                            .matchId(match.getId())
+//                            .teamAName(match.getTeamA().getName())
+//                            .teamBName(match.getTeamB().getName())
+//                            .pointsWinA(match.getPointsWinA())
+//                            .pointsWinB(match.getPointsWinB())
+//                            .pointsDraw(match.getPointsDraw());
+//
+//            if (prediction != null) {
+//                builder
+//                        .predictedScoreA(prediction.getPredictedScoreA())
+//                        .predictedScoreB(prediction.getPredictedScoreB());
+//            }
+//
+//            responses.add(builder.build());
+//        }
+//
+//        return responses;
+//    }
+
+
     @Override
     public List<MatchWithPredectionResponse> getMatchsWithPredectionsByUser(Long userId) {
 
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
-        List<MatchEntity> matchs = matchRepository.findAllByUserEntity_Id(userId);
-
-        List<MatchWithPredectionResponse> responses = new ArrayList<>();
-
-        for (MatchEntity match : matchs) {
-
-            PredictionEntity prediction = predictionRepository
-                    .findByUserEntityAndMatchEntity(user, match)
-                    .orElse(null);
-
-            MatchWithPredectionResponse.MatchWithPredectionResponseBuilder builder =
-                    MatchWithPredectionResponse.builder()
-                            .matchId(match.getId())
-                            .teamAName(match.getTeamA().getName())
-                            .teamBName(match.getTeamB().getName())
-                            .pointsWinA(match.getPointsWinA())
-                            .pointsWinB(match.getPointsWinB())
-                            .pointsDraw(match.getPointsDraw());
-
-            if (prediction != null) {
-                builder
-                        .predictedScoreA(prediction.getPredictedScoreA())
-                        .predictedScoreB(prediction.getPredictedScoreB());
-            }
-
-            responses.add(builder.build());
+        if (!userRepository.existsById(userId)) {
+            throw new NotFoundException("User not found");
         }
 
-        return responses;
+        return matchRepository.findMatchesWithPredictionsByUser(userId);
     }
-
-
 
 }
