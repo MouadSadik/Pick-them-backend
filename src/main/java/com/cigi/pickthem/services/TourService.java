@@ -1,6 +1,6 @@
 package com.cigi.pickthem.services;
 
-import com.cigi.pickthem.domain.DTO.TourDto;
+import com.cigi.pickthem.domain.dtos.TourDto;
 import java.util.List;
 
 public interface TourService {

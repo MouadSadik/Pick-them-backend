@@ -1,6 +1,6 @@
 package com.cigi.pickthem.services.impl;
 
-import com.cigi.pickthem.domain.DTO.TeamDTO;
+import com.cigi.pickthem.domain.dtos.TeamDTO;
 import com.cigi.pickthem.domain.entities.TeamEntity;
 import com.cigi.pickthem.exception.NotFoundException;
 import com.cigi.pickthem.mappers.TeamMapper;

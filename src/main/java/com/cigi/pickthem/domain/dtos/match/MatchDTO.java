@@ -1,4 +1,4 @@
-package com.cigi.pickthem.domain.DTO;
+package com.cigi.pickthem.domain.dtos.match;
 
 import com.cigi.pickthem.domain.enums.MatchResult;
 import lombok.Builder;

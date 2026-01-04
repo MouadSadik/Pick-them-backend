@@ -1,7 +1,7 @@
 package com.cigi.pickthem.services.impl;
 
-import com.cigi.pickthem.domain.DTO.MatchDTO;
-import com.cigi.pickthem.domain.DTO.MatchWithPredectionResponse;
+import com.cigi.pickthem.domain.dtos.match.MatchDTO;
+import com.cigi.pickthem.domain.dtos.match.MatchWithPredectionResponse;
 import com.cigi.pickthem.domain.entities.*;
 import com.cigi.pickthem.domain.enums.MatchResult;
 import com.cigi.pickthem.exception.NotFoundException;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author $ {USERS}

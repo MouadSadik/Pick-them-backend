@@ -1,8 +1,7 @@
 package com.cigi.pickthem.services;
 
-import com.cigi.pickthem.domain.DTO.MatchDTO;
-import com.cigi.pickthem.domain.DTO.MatchWithPredectionResponse;
-import com.cigi.pickthem.domain.entities.MatchEntity;
+import com.cigi.pickthem.domain.dtos.match.MatchDTO;
+import com.cigi.pickthem.domain.dtos.match.MatchWithPredectionResponse;
 
 import java.util.List;
 

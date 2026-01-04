@@ -1,7 +1,7 @@
 package com.cigi.pickthem.mappers;
 
 import com.cigi.pickthem.domain.entities.MatchEntity;
-import com.cigi.pickthem.domain.DTO.MatchDTO;
+import com.cigi.pickthem.domain.dtos.match.MatchDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

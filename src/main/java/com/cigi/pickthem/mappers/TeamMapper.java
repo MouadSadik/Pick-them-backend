@@ -1,6 +1,6 @@
 package com.cigi.pickthem.mappers;
 
-import com.cigi.pickthem.domain.DTO.TeamDTO;
+import com.cigi.pickthem.domain.dtos.TeamDTO;
 import com.cigi.pickthem.domain.entities.TeamEntity;
 import org.mapstruct.Mapper;
 

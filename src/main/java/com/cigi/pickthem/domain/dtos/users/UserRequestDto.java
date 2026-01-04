@@ -1,4 +1,4 @@
-package com.cigi.pickthem.domain.dtos;
+package com.cigi.pickthem.domain.dtos.users;
 
 import com.cigi.pickthem.domain.enums.Role;
 import jakarta.validation.constraints.Email;

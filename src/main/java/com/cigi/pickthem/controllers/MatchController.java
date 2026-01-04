@@ -1,9 +1,9 @@
 package com.cigi.pickthem.controllers;
 
-import com.cigi.pickthem.domain.DTO.CreateMatchRequest;
-import com.cigi.pickthem.domain.DTO.EnterResultRequest;
-import com.cigi.pickthem.domain.DTO.MatchDTO;
-import com.cigi.pickthem.domain.DTO.MatchWithPredectionResponse;
+import com.cigi.pickthem.domain.dtos.match.CreateMatchRequest;
+import com.cigi.pickthem.domain.dtos.match.EnterResultRequest;
+import com.cigi.pickthem.domain.dtos.match.MatchDTO;
+import com.cigi.pickthem.domain.dtos.match.MatchWithPredectionResponse;
 import com.cigi.pickthem.services.MatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

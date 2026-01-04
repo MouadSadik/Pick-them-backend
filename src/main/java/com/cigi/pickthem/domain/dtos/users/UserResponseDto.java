@@ -1,4 +1,4 @@
-package com.cigi.pickthem.domain.dtos;
+package com.cigi.pickthem.domain.dtos.users;
 
 import com.cigi.pickthem.domain.enums.Role;
 import lombok.AllArgsConstructor;
@@ -16,4 +16,7 @@ public class UserResponseDto {
     private String email;
     private Role role;
     private int totalPoints;
+
+    private String imageUrl;
+    private String cloudinaryPublicId;
 }

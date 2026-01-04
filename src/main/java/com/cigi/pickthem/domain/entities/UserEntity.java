@@ -37,6 +37,9 @@ public class UserEntity implements UserDetails {
 
     private int totalPoints;
 
+    private String imageUrl; // URL retournée par Cloudinary
+    private String imagePublicId; // ID Cloudinary pour suppression
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

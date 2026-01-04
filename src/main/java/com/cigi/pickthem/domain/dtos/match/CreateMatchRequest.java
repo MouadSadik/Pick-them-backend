@@ -1,4 +1,4 @@
-package com.cigi.pickthem.domain.DTO;
+package com.cigi.pickthem.domain.dtos.match;
 
 import lombok.Getter;
 import lombok.Setter;

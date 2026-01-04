@@ -1,8 +1,8 @@
 package com.cigi.pickthem.services.impl;
 
-import com.cigi.pickthem.domain.dtos.UserRequestDto;
-import com.cigi.pickthem.domain.dtos.UserResponseDto;
-import com.cigi.pickthem.domain.dtos.UserUpdateRequestDto;
+import com.cigi.pickthem.domain.dtos.CloudinaryResponse;
+import com.cigi.pickthem.domain.dtos.users.UserResponseDto;
+import com.cigi.pickthem.domain.dtos.users.UserUpdateRequestDto;
 import com.cigi.pickthem.domain.entities.PredictionEntity;
 import com.cigi.pickthem.domain.entities.UserEntity;
 import com.cigi.pickthem.exception.NotFoundException;
@@ -24,27 +24,61 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PredictionRepository predictionRepository;
+    private final CloudinaryService cloudinaryService;
 
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper,
-            PredictionRepository predictionRepository) {
+                           PredictionRepository predictionRepository, CloudinaryService cloudinaryService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.predictionRepository = predictionRepository;
+        this.cloudinaryService = cloudinaryService;
     }
+
+//    @Override
+//    @Transactional
+//    public UserResponseDto updateUser(Long userId, UserUpdateRequestDto requestDto) {
+//        return userRepository.findById(userId)
+//                .map(user -> {
+//                    // verify that email is not used befor
+//                    // if (userRepository.existsByEmailAndIdNot(requestDto.getEmail(), userId)) {
+//                    // throw new IllegalArgumentException("Email Used Before");
+//                    // }
+//
+//                    // update username and email
+//                    user.setName(requestDto.getName());
+//                    // user.setEmail(requestDto.getEmail());
+//
+//                    UserEntity updatedUser = userRepository.save(user);
+//
+//                    return userMapper.toDto(updatedUser);
+//                })
+//                .orElseThrow(() -> new RuntimeException("User Not Found with id " + userId));
+//    }
 
     @Override
     @Transactional
     public UserResponseDto updateUser(Long userId, UserUpdateRequestDto requestDto) {
         return userRepository.findById(userId)
                 .map(user -> {
-                    // verify that email is not used befor
-                    // if (userRepository.existsByEmailAndIdNot(requestDto.getEmail(), userId)) {
-                    // throw new IllegalArgumentException("Email Used Before");
-                    // }
 
-                    // update username and email
+                    // Update name
                     user.setName(requestDto.getName());
-                    // user.setEmail(requestDto.getEmail());
+
+                    // Update image if provided
+                    if (requestDto.getImage() != null && !requestDto.getImage().isEmpty()) {
+                        if (user.getImagePublicId() != null) {
+                            try {
+                                cloudinaryService.deleteImage(user.getImagePublicId());
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+
+                        CloudinaryResponse response = cloudinaryService.uploadImage(requestDto.getImage());
+                        user.setImageUrl(response.getUrl());
+                        user.setImagePublicId(response.getPublicId());
+                    }
+
 
                     UserEntity updatedUser = userRepository.save(user);
 
@@ -52,6 +86,7 @@ public class UserServiceImpl implements UserService {
                 })
                 .orElseThrow(() -> new RuntimeException("User Not Found with id " + userId));
     }
+
 
     @Override
     public UserResponseDto deleteUser(Long userId) {

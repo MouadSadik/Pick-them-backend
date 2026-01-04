@@ -1,6 +1,6 @@
 package com.cigi.pickthem.services;
 
-import com.cigi.pickthem.domain.DTO.TeamDTO;
+import com.cigi.pickthem.domain.dtos.TeamDTO;
 
 import java.util.List;
 

@@ -1,6 +1,7 @@
 package com.cigi.pickthem.controllers;
 
 
+import com.cigi.pickthem.domain.dtos.CloudinaryResponse;
 import com.cigi.pickthem.exception.UnauthorizedException;
 import com.cigi.pickthem.services.impl.CloudinaryService;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,21 @@ public class UploadController {
         this.cloudinaryService = cloudinaryService;
     }
 
-    @PostMapping
-    public ResponseEntity<String> upload(
+    @PostMapping("/user/{userId}")
+    public ResponseEntity<CloudinaryResponse> uploadUserImage(
+            @PathVariable Long userId,
             @RequestParam("file") MultipartFile file
     ) {
-        String imageUrl = cloudinaryService.uploadImage(file);
-        return ResponseEntity.ok(imageUrl);
+        // Upload image via Cloudinary
+        CloudinaryResponse response = cloudinaryService.uploadImage(file);
+
+        // Ici, tu peux mettre à jour directement le user si tu veux
+        // userService.updateUserImage(userId, response.getUrl(), response.getPublicId());
+
+        CloudinaryResponse uploadResponse = new CloudinaryResponse(response.getUrl(), response.getPublicId());
+        return ResponseEntity.ok(uploadResponse);
     }
+
 
     @DeleteMapping("/{publicId}")
     public ResponseEntity<String> deleteImage(@PathVariable String publicId) {
@@ -39,4 +48,6 @@ public class UploadController {
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
+
+
 }

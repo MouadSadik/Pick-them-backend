@@ -1,6 +1,6 @@
 package com.cigi.pickthem.controllers;
 
-import com.cigi.pickthem.domain.DTO.TourDto;
+import com.cigi.pickthem.domain.dtos.TourDto;
 import com.cigi.pickthem.services.TourService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

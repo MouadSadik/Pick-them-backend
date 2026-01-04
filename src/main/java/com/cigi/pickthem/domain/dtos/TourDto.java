@@ -1,4 +1,4 @@
-package com.cigi.pickthem.domain.DTO;
+package com.cigi.pickthem.domain.dtos;
 
 import com.cigi.pickthem.domain.enums.TourStatus;
 import jakarta.validation.constraints.Size;

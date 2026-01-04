@@ -1,6 +1,7 @@
 package com.cigi.pickthem.services.impl;
 
 
+import com.cigi.pickthem.domain.dtos.CloudinaryResponse;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,8 @@ public class CloudinaryService {
         this.cloudinary = cloudinary;
     }
 
-    public String uploadImage(MultipartFile file) {
+    // Retourne URL + publicId
+    public CloudinaryResponse uploadImage(MultipartFile file) {
         try {
             Map uploadResult = cloudinary.uploader().upload(
                     file.getBytes(),
@@ -25,7 +27,12 @@ public class CloudinaryService {
                             "folder", "pick_them"
                     )
             );
-            return uploadResult.get("secure_url").toString();
+
+            String url = uploadResult.get("secure_url").toString();
+            String publicId = uploadResult.get("public_id").toString(); // <-- publicId récupéré
+
+            return new CloudinaryResponse(url, publicId);
+
         } catch (Exception e) {
             throw new RuntimeException("Image upload failed", e);
         }
@@ -33,7 +40,6 @@ public class CloudinaryService {
 
     public boolean deleteImage(String publicId) throws Exception {
         Map result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
-        // Cloudinary returns {"result":"ok"} if deleted
         return "ok".equals(result.get("result"));
     }
 }

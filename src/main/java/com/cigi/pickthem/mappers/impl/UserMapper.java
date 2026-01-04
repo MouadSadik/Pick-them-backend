@@ -1,10 +1,9 @@
 package com.cigi.pickthem.mappers.impl;
 
-import com.cigi.pickthem.domain.dtos.UserRequestDto;
-import com.cigi.pickthem.domain.dtos.UserResponseDto;
+import com.cigi.pickthem.domain.dtos.users.UserRequestDto;
+import com.cigi.pickthem.domain.dtos.users.UserResponseDto;
 import com.cigi.pickthem.domain.entities.UserEntity;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
 
 import java.util.List;
 

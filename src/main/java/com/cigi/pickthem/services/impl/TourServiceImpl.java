@@ -1,6 +1,6 @@
 package com.cigi.pickthem.services.impl;
 
-import com.cigi.pickthem.domain.DTO.TourDto;
+import com.cigi.pickthem.domain.dtos.TourDto;
 import com.cigi.pickthem.domain.entities.TourEntity;
 import com.cigi.pickthem.exception.ConflictException;
 import com.cigi.pickthem.exception.NotFoundException; // Ton exception perso

@@ -1,7 +1,7 @@
 package com.cigi.pickthem.services;
 
-import com.cigi.pickthem.domain.dtos.UserResponseDto;
-import com.cigi.pickthem.domain.dtos.UserUpdateRequestDto;
+import com.cigi.pickthem.domain.dtos.users.UserResponseDto;
+import com.cigi.pickthem.domain.dtos.users.UserUpdateRequestDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

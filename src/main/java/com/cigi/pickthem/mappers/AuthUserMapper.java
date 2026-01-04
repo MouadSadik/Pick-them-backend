@@ -1,7 +1,7 @@
 package com.cigi.pickthem.mappers;
 
 import org.mapstruct.Mapper;
-import com.cigi.pickthem.domain.dtos.UserResponseDto;
+import com.cigi.pickthem.domain.dtos.users.UserResponseDto;
 import com.cigi.pickthem.domain.entities.UserEntity;
 
 @Mapper(componentModel = "spring")

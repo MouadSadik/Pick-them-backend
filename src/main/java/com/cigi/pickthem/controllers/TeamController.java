@@ -1,10 +1,10 @@
 package com.cigi.pickthem.controllers;
 
-import com.cigi.pickthem.domain.DTO.TeamDTO;
+import com.cigi.pickthem.domain.dtos.TeamDTO;
+import com.cigi.pickthem.domain.dtos.CloudinaryResponse;
 import com.cigi.pickthem.services.impl.CloudinaryService;
 import com.cigi.pickthem.services.TeamService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +38,17 @@ public class TeamController {
                 .name(name)
                 .build();
 
+//        if (file != null && !file.isEmpty()) {
+//            CloudinaryResponse imageUrl = cloudinaryService.uploadImage(file);
+//            teamDTO.setImageUrl(imageUrl);
+//        }
+
         if (file != null && !file.isEmpty()) {
-            String imageUrl = cloudinaryService.uploadImage(file);
-            teamDTO.setImageUrl(imageUrl);
+            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadImage(file);
+
+            // Stocke URL et publicId
+            teamDTO.setImageUrl(cloudinaryResponse.getUrl());
+            teamDTO.setCloudinaryPublicId(cloudinaryResponse.getPublicId());
         }
 
         TeamDTO saved = teamService.createTeam(teamDTO);
@@ -59,9 +67,17 @@ public class TeamController {
         TeamDTO teamDTO = teamService.getTeamById(id);
         teamDTO.setName(name);
 
+//        if (file != null && !file.isEmpty()) {
+//            String imageUrl = cloudinaryService.uploadImage(file);
+//            teamDTO.setImageUrl(imageUrl);
+//        }
+
         if (file != null && !file.isEmpty()) {
-            String imageUrl = cloudinaryService.uploadImage(file);
-            teamDTO.setImageUrl(imageUrl);
+            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadImage(file);
+
+            // Stocke URL et publicId
+            teamDTO.setImageUrl(cloudinaryResponse.getUrl());
+            teamDTO.setCloudinaryPublicId(cloudinaryResponse.getPublicId());
         }
 
         return ResponseEntity.ok(teamService.updateTeam(id, teamDTO));

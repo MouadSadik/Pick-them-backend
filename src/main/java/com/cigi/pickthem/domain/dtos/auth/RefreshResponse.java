@@ -1,6 +1,6 @@
 package com.cigi.pickthem.domain.dtos.auth;
 
-import com.cigi.pickthem.domain.dtos.UserResponseDto;
+import com.cigi.pickthem.domain.dtos.users.UserResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
