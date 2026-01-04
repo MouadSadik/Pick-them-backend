@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserUpdateRequestDto {
 
-    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
-    private String username;
+    @Size(min = 3, max = 20, message = "Name must be between 3 and 20 characters")
+    private String name;
 }

@@ -37,7 +37,7 @@ public class AuthenticationService {
                 }
 
                 var user = UserEntity.builder()
-                                .username(request.getUsername())
+                                .name(request.getName())
                                 .email(request.getEmail())
                                 .password(passwordEncoder.encode(request.getPassword()))
                                 .role(request.getRole())

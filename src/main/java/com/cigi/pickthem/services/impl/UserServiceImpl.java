@@ -25,7 +25,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PredictionRepository predictionRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PredictionRepository predictionRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper,
+            PredictionRepository predictionRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.predictionRepository = predictionRepository;
@@ -36,14 +37,14 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto updateUser(Long userId, UserUpdateRequestDto requestDto) {
         return userRepository.findById(userId)
                 .map(user -> {
-                    //verify that email is not used befor
-//                    if (userRepository.existsByEmailAndIdNot(requestDto.getEmail(), userId)) {
-//                        throw new IllegalArgumentException("Email Used Before");
-//                    }
+                    // verify that email is not used befor
+                    // if (userRepository.existsByEmailAndIdNot(requestDto.getEmail(), userId)) {
+                    // throw new IllegalArgumentException("Email Used Before");
+                    // }
 
-                    //update username and email
-                    user.setUsername(requestDto.getUsername());
-//                    user.setEmail(requestDto.getEmail());
+                    // update username and email
+                    user.setName(requestDto.getName());
+                    // user.setEmail(requestDto.getEmail());
 
                     UserEntity updatedUser = userRepository.save(user);
 
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto deleteUser(Long userId) {
 
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(()-> new NotFoundException("User Not Found with id : " + userId));
+                .orElseThrow(() -> new NotFoundException("User Not Found with id : " + userId));
         userRepository.delete(user);
 
         return userMapper.toDto(user);
@@ -100,7 +101,6 @@ public class UserServiceImpl implements UserService {
 
         return userMapper.toDto(user);
     }
-
 
     @Override
     public List<UserResponseDto> getTopUsers(int limit) {

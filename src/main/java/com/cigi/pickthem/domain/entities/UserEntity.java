@@ -25,7 +25,7 @@ public class UserEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String username; 
+    private String name; // anciennement username
 
     @Column(unique = true)
     private String email;
@@ -49,7 +49,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return email; // authentication by email
     }
 
     @Override
@@ -72,7 +72,7 @@ public class UserEntity implements UserDetails {
         return true;
     }
 
-    public boolean isAdmin(){
+    public boolean isAdmin() {
         return this.role == Role.ADMIN;
     }
 
