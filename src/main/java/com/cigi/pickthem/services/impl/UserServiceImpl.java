@@ -101,12 +101,19 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDto(user);
     }
 
-
     @Override
     public List<UserResponseDto> getTopUsers(int limit) {
         return userRepository.findAll(Sort.by(Sort.Direction.DESC, "totalPoints"))
                 .stream()
                 .limit(limit)
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserResponseDto> getTop3Users() {
+        return userRepository.findTop3ByOrderByTotalPointsAsc()
+                .stream()
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }

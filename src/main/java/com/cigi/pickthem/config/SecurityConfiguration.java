@@ -27,7 +27,12 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html"
+                        )
+                                .permitAll()
                                 .requestMatchers("/api/v1/teams/create").permitAll()
 //                        .requestMatchers("/api/v1/**").permitAll()
                         .anyRequest().authenticated()
