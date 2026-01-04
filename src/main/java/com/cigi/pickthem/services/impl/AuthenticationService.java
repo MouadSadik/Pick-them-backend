@@ -1,4 +1,4 @@
-package com.cigi.pickthem.services;
+package com.cigi.pickthem.services.impl;
 
 import com.cigi.pickthem.config.JwtService;
 import com.cigi.pickthem.domain.dtos.auth.LoginRequest;
@@ -16,7 +16,6 @@ import com.cigi.pickthem.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

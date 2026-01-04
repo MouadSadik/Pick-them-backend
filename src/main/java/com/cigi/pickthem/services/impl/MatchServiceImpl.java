@@ -8,7 +8,6 @@ import com.cigi.pickthem.exception.NotFoundException;
 import com.cigi.pickthem.mappers.MatchMapper;
 import com.cigi.pickthem.repositories.*;
 import com.cigi.pickthem.services.MatchService;
-import com.cigi.pickthem.services.PredictionService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;

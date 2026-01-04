@@ -3,7 +3,7 @@ package com.cigi.pickthem.controllers;
 import com.cigi.pickthem.domain.dtos.predictions.*;
 import com.cigi.pickthem.domain.entities.PredictionEntity;
 import com.cigi.pickthem.mappers.PredictionMapper;
-import com.cigi.pickthem.services.PredictionService;
+import com.cigi.pickthem.services.impl.PredictionService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

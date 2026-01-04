@@ -18,5 +18,5 @@ public class UserResponseDto {
     private int totalPoints;
 
     private String imageUrl;
-    private String cloudinaryPublicId;
+    private String publicId;
 }

@@ -17,7 +17,7 @@ import com.cigi.pickthem.domain.dtos.auth.LogoutResponse;
 import com.cigi.pickthem.domain.dtos.auth.RefreshResponse;
 import com.cigi.pickthem.domain.dtos.auth.RegisterRequest;
 import com.cigi.pickthem.domain.dtos.auth.RegisterResponse;
-import com.cigi.pickthem.services.AuthenticationService;
+import com.cigi.pickthem.services.impl.AuthenticationService;
 
 import java.util.Arrays;
 

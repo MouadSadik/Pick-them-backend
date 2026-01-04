@@ -1,4 +1,4 @@
-package com.cigi.pickthem.services;
+package com.cigi.pickthem.services.impl;
 
 import com.cigi.pickthem.domain.dtos.predictions.*;
 import com.cigi.pickthem.domain.entities.*;

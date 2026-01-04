@@ -77,6 +77,7 @@ public class UserServiceImpl implements UserService {
                         CloudinaryResponse response = cloudinaryService.uploadImage(requestDto.getImage());
                         user.setImageUrl(response.getUrl());
                         user.setImagePublicId(response.getPublicId());
+                        
                     }
 
 
