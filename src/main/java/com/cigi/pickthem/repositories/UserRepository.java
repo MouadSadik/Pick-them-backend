@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     boolean existsByEmailAndIdNot(String email, Long id);
 
+    List<UserEntity> findTop3ByOrderByTotalPointsAsc();
+
 }

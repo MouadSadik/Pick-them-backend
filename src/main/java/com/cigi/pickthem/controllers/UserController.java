@@ -72,4 +72,10 @@ public class UserController {
         return ResponseEntity.ok(topUsers);
     }
 
+    @GetMapping("/top3")
+    public ResponseEntity<List<UserResponseDto>> getTop3Users(){
+        List<UserResponseDto> top3Users = userService.getTop3Users();
+        return ResponseEntity.ok(top3Users);
+    }
+
 }

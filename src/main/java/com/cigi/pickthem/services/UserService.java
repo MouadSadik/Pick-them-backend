@@ -24,4 +24,6 @@ public interface UserService {
 
     UserResponseDto updateTotalPoints(Long userId);
 
+    List<UserResponseDto> getTop3Users();
+
 }

@@ -111,4 +111,12 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<UserResponseDto> getTop3Users() {
+        return userRepository.findTop3ByOrderByTotalPointsAsc()
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 }
