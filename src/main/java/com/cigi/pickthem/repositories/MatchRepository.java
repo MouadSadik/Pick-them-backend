@@ -14,7 +14,7 @@ import java.util.List;
 public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
 
     @Query("""
-    SELECT new com.cigi.pickthem.domain.DTO.MatchWithPredectionResponse(
+    SELECT new com.cigi.pickthem.domain.dtos.match.MatchWithPredectionResponse(
         m.id,
         p.predictedScoreA,
         p.predictedScoreB,
