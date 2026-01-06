@@ -1,40 +1,46 @@
 package com.cigi.pickthem.domain.entities;
 
+import com.cigi.pickthem.domain.enums.MatchResult;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Builder
+@Getter
+@Setter
 @Entity
-@Table(
-        name = "predictions",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"user_id", "match_id"})
-        }
-)
+@Table(name = "predictions", uniqueConstraints = {
+                @UniqueConstraint(columnNames = { "user_id", "match_id" })
+})
 public class PredictionEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    private Integer scoreA;
+        @Column(name = "predicted_score_a")
+        private Integer predictedScoreA;
 
-    private Integer scoreB;
+        @Column(name = "predicted_score_b")
+        private Integer predictedScoreB;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+        @Enumerated(EnumType.STRING)
+        @Column(name = "predicted_result", nullable = false)
+        private MatchResult predictedResult;
 
-    @ManyToOne
-    @JoinColumn(name = "match_id", nullable = false)
-    private MatchEntity match;
+        private Integer points;
 
-    private int points;
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "user_id", nullable = false)
+        private UserEntity user;
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "match_id", nullable = false)
+        private MatchEntity match;
+        //private boolean pointsDispatched;
+        @Enumerated(EnumType.STRING)
+        private MatchResult calculatedForResult;
+
 }

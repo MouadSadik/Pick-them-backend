@@ -27,7 +27,14 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/api/v1/tours"
+                        )
+                                .permitAll()
+                                .requestMatchers("/api/v1/teams/create").permitAll()
 //                        .requestMatchers("/api/v1/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -44,7 +51,7 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(
-                List.of("http://localhost:3000", "http://127.0.0.1:5500")
+                List.of("http://localhost:3000", "http://127.0.0.1:5500","http://localhost:3001")
         );
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

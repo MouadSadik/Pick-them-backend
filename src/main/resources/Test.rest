@@ -1,0 +1,10 @@
+### login
+POST http://localhost:8081/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email" : "khalilbaidouri@gmail.com",
+  "password" : "khalilbaidouri"
+}
+
+###

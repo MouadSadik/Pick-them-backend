@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "tours")
 public class TourEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

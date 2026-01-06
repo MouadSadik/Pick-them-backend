@@ -1,5 +1,4 @@
-package com.cigi.pickthem.auth;
-
+package com.cigi.pickthem.domain.dtos.users;
 
 import com.cigi.pickthem.domain.enums.Role;
 import lombok.AllArgsConstructor;
@@ -11,13 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegisterRequest {
-
-    private String username;
-
+public class UserResponseDto {
+    private Integer id;
+    private String name;
     private String email;
-
-    private String password;
-
     private Role role;
+    private int totalPoints;
+
+    private String imageUrl;
+    private String publicId;
 }

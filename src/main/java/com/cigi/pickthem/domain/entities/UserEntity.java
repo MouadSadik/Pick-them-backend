@@ -25,7 +25,7 @@ public class UserEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String username;
+    private String name; // anciennement username
 
     @Column(unique = true)
     private String email;
@@ -36,6 +36,9 @@ public class UserEntity implements UserDetails {
     private Role role;
 
     private int totalPoints;
+
+    private String imageUrl; // URL retournée par Cloudinary
+    private String imagePublicId; // ID Cloudinary pour suppression
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -49,7 +52,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return email; // authentication by email
     }
 
     @Override
@@ -70,5 +73,17 @@ public class UserEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public boolean isAdmin() {
+        return this.role == Role.ADMIN;
+    }
+
+    public void addPoints(int points) {
+        this.totalPoints += points;
+    }
+
+    public void resetPoints() {
+        this.totalPoints = 0;
     }
 }
