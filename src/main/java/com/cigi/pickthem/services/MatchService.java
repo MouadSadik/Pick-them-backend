@@ -18,4 +18,6 @@ public interface MatchService {
     List<MatchDTO> getAllMatches();
     //List<MatchWithPredectionResponse> getMatchsWithPredectionsByUser(Long userId);
     public List<MatchWithPredectionResponse> getMatchsWithPredectionsByUser(Long userId);
+
+    public List<MatchDTO> getMatchesByTour(Long tourId);
     }

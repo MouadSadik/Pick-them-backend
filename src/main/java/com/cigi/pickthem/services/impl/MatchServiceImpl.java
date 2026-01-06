@@ -237,4 +237,18 @@ public class MatchServiceImpl implements MatchService {
         return matchRepository.findMatchesWithPredictionsByUser(userId);
     }
 
+
+    @Override
+    public List<MatchDTO> getMatchesByTour(Long tourId) {
+
+        TourEntity tour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new RuntimeException("Tour not found"));
+
+        return matchRepository.findByTourId(tourId)
+                .stream()
+                .map(matchMapper::toDto)
+                .toList();
+    }
+
+
 }

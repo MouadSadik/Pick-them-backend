@@ -33,5 +33,7 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
             @Param("userId") Long userId
     );
 
+    List<MatchEntity> findByTourId(Long tourId);
+
 
 }
