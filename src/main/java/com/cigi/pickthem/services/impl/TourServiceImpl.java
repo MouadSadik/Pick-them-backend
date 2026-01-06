@@ -8,6 +8,7 @@ import com.cigi.pickthem.mappers.TourMapper;
 import com.cigi.pickthem.repositories.TourRepository;
 import com.cigi.pickthem.services.TourService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
