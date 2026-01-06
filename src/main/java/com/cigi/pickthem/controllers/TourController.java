@@ -1,6 +1,8 @@
 package com.cigi.pickthem.controllers;
 
 import com.cigi.pickthem.domain.dtos.TourDto;
+import com.cigi.pickthem.domain.dtos.match.MatchDTO;
+import com.cigi.pickthem.services.MatchService;
 import com.cigi.pickthem.services.TourService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.List;
 public class TourController {
 
     private final TourService tourService;
+    private final MatchService matchService;
 
     @GetMapping
     public ResponseEntity<List<TourDto>> getAllTours() {
@@ -44,4 +47,12 @@ public class TourController {
         tourService.deleteTour(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{tourId}/matches")
+    public ResponseEntity<List<MatchDTO>> getTourMatches(
+            @PathVariable Long tourId
+    ) {
+        return ResponseEntity.ok(matchService.getMatchesByTour(tourId));
+    }
+
 }
