@@ -30,7 +30,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/v1/auth/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/api/v1/tours"
                         )
                                 .permitAll()
                                 .requestMatchers("/api/v1/teams/create").permitAll()
