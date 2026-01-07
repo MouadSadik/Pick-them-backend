@@ -15,12 +15,12 @@ public class MatchWithPredectionResponse {
     private Long matchId;
     private Integer predictedScoreA;
     private Integer predictedScoreB;
-//    private String teamAName;
-//    private String teamBName;
     private TeamEntity teamA;
     private TeamEntity teamB;
     private int pointsWinA;
     private int pointsWinB;
     private int pointsDraw;
+    private Integer scoreA;
+    private Integer scoreB;
     private String nameTour;
 }
