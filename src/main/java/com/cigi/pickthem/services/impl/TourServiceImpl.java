@@ -2,6 +2,7 @@ package com.cigi.pickthem.services.impl;
 
 import com.cigi.pickthem.domain.dtos.TourDto;
 import com.cigi.pickthem.domain.entities.TourEntity;
+import com.cigi.pickthem.domain.enums.TourStatus;
 import com.cigi.pickthem.exception.ConflictException;
 import com.cigi.pickthem.exception.NotFoundException; // Ton exception perso
 import com.cigi.pickthem.mappers.TourMapper;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,5 +73,13 @@ public class TourServiceImpl implements TourService {
             throw new NotFoundException("Impossible : Tour not found");
         }
         tourRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean isOpened(Long tourId) {
+        TourEntity tour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new NotFoundException("Tour not found with id : " + tourId));
+
+        return tour.getStatus() == TourStatus.OPEN;
     }
 }

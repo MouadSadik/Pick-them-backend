@@ -55,4 +55,9 @@ public class TourController {
         return ResponseEntity.ok(matchService.getMatchesByTour(tourId));
     }
 
+    @GetMapping("/{tourId}/is-opened")
+    public boolean isOpened(@PathVariable Long tourId){
+        return tourService.isOpened(tourId);
+    }
+
 }
