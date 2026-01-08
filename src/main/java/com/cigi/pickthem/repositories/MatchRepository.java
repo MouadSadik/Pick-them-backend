@@ -24,6 +24,8 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
         m.pointsWinA,
         m.pointsWinB,
         m.pointsDraw,
+        m.scoreA,
+        m.scoreB,
         t.name
     )
     FROM MatchEntity m
