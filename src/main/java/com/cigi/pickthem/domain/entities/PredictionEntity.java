@@ -39,7 +39,6 @@ public class PredictionEntity {
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "match_id", nullable = false)
         private MatchEntity match;
-        //private boolean pointsDispatched;
         @Enumerated(EnumType.STRING)
         private MatchResult calculatedForResult;
 

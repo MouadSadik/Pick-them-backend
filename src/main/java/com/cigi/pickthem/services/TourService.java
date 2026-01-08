@@ -9,4 +9,6 @@ public interface TourService {
     List<TourDto> getAllTours();
     TourDto getTourById(Long id);
     void deleteTour(Long id);
+
+    boolean isOpened(Long tourId);
 }

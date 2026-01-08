@@ -17,7 +17,7 @@ public interface PredictionRepository extends JpaRepository<PredictionEntity, Lo
     List<PredictionEntity> findByUserId(Long userId);
 //    Optional<PredictionEntity> findByUserEntityAndMatchEntity(
 //            UserEntity user,
-//            MatchEntity match
+//           MatchEntity match
 //    );
 
 

@@ -1,5 +1,6 @@
 package com.cigi.pickthem.services.impl;
 
+import com.cigi.pickthem.domain.dtos.TeamDTO;
 import com.cigi.pickthem.domain.dtos.predictions.*;
 import com.cigi.pickthem.domain.entities.*;
 import com.cigi.pickthem.domain.enums.MatchResult;
@@ -10,6 +11,8 @@ import com.cigi.pickthem.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -126,6 +129,39 @@ public class PredictionService {
             return match.getPointsDraw();
         }
     }
+
+    public List<PredictionResponse> getAllPredictions() {
+        return predictionRepository.findAll()
+                .stream()
+                .map(prediction -> new PredictionResponse(
+                        prediction.getId(),
+                        prediction.getMatch().getId(),
+                        prediction.getPredictedScoreA(),
+                        prediction.getPredictedScoreB(),
+                        prediction.getPredictedResult(),
+                        prediction.getPoints()
+                ))
+                .toList();
+    }
+
+    public List<PredictionResponse> getUserPredictions() {
+
+        UserEntity user = getCurrentUser();
+
+        return predictionRepository.findByUserId(Long.valueOf(user.getId()))
+                .stream()
+                .map(prediction -> new PredictionResponse(
+                        prediction.getId(),
+                        prediction.getMatch().getId(),
+                        prediction.getPredictedScoreA(),
+                        prediction.getPredictedScoreB(),
+                        prediction.getPredictedResult(),
+                        prediction.getPoints()
+                ))
+                .toList();
+    }
+
+
 
 
 }
