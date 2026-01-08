@@ -36,6 +36,7 @@ public class SecurityConfiguration {
                         )
                                 .permitAll()
                                 .requestMatchers("/api/v1/teams/create").permitAll()
+                                .requestMatchers("api/v1/health").permitAll()
 //                        .requestMatchers("/api/v1/**").permitAll()
                         .anyRequest().authenticated()
                 )
