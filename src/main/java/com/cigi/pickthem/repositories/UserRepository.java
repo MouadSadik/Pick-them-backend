@@ -1,6 +1,7 @@
 package com.cigi.pickthem.repositories;
 
 import com.cigi.pickthem.domain.entities.UserEntity;
+import com.cigi.pickthem.domain.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +15,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     boolean existsByEmailAndIdNot(String email, Long id);
 
-    List<UserEntity> findTop3ByOrderByTotalPointsAsc();
+    List<UserEntity> findTop3ByOrderByTotalPointsDesc();
+
+    List<UserEntity> findByRoleOrderByTotalPointsDesc(Role role);
 
 }
