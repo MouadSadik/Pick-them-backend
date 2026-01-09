@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class TourController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     // @Valid est CRUCIAL ici. Sans lui, les annotations @NotBlank du DTO sont ignorees.
     public ResponseEntity<TourDto> createTour(@Valid @RequestBody TourDto tourDto) {
         TourDto createdTour = tourService.createTour(tourDto);
@@ -38,11 +40,13 @@ public class TourController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TourDto> updateTour(@PathVariable Long id, @Valid @RequestBody TourDto tourDto) {
         return ResponseEntity.ok(tourService.updateTour(id, tourDto));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteTour(@PathVariable Long id) {
         tourService.deleteTour(id);
         return ResponseEntity.noContent().build();

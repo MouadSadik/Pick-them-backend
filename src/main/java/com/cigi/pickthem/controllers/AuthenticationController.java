@@ -96,12 +96,14 @@ public class AuthenticationController {
     private ResponseCookie buildRefreshTokenCookie(String token) {
         return ResponseCookie.from("refresh_token", token)
                 .httpOnly(true) // Protection XSS
-                .secure(false) // true en prod (HTTPS)
-                .sameSite("lax") // Protection CSRF
+                .secure(true) // true en prod (HTTPS)
+                .sameSite("none") // Protection CSRF
                 .path("/")
                 .maxAge(7 * 24 * 60 * 60) // 7 jours
                 .build();
     }
+
+
 
     private String extractRefreshTokenFromCookie(HttpServletRequest request) {
         if (request.getCookies() == null) {
