@@ -5,6 +5,7 @@ import com.cigi.pickthem.domain.dtos.users.UserResponseDto;
 import com.cigi.pickthem.domain.dtos.users.UserUpdateRequestDto;
 import com.cigi.pickthem.domain.entities.PredictionEntity;
 import com.cigi.pickthem.domain.entities.UserEntity;
+import com.cigi.pickthem.domain.enums.Role;
 import com.cigi.pickthem.exception.NotFoundException;
 import com.cigi.pickthem.mappers.impl.UserMapper;
 import com.cigi.pickthem.repositories.PredictionRepository;
@@ -138,10 +139,20 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDto(user);
     }
 
-    @Override
+//    @Override
+//    public List<UserResponseDto> getTopUsers(int limit) {
+//        return userRepository.findAll(Sort.by(Sort.Direction.DESC, "totalPoints"))
+//                .stream()
+//                .limit(limit)
+//                .map(userMapper::toDto)
+//                .collect(Collectors.toList());
+//    }
+
     public List<UserResponseDto> getTopUsers(int limit) {
-        return userRepository.findAll(Sort.by(Sort.Direction.DESC, "totalPoints"))
-                .stream()
+        // Fetch users with role USER only, ordered by points descending
+        List<UserEntity> users = userRepository.findByRoleOrderByTotalPointsDesc(Role.USER);
+
+        return users.stream()
                 .limit(limit)
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
@@ -149,7 +160,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponseDto> getTop3Users() {
-        return userRepository.findTop3ByOrderByTotalPointsAsc()
+        return userRepository.findTop3ByOrderByTotalPointsDesc()
                 .stream()
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
