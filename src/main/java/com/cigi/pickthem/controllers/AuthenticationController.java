@@ -78,10 +78,10 @@ public class AuthenticationController {
         // Supprimer le cookie refresh token
         ResponseCookie cookie = ResponseCookie.from("refresh_token", "")
                 .httpOnly(true)
-                .secure(false) // true en prod
+                .secure(true) // true en prod
                 .path("/")
                 .maxAge(0) // delete cookie
-                .sameSite("Strict")
+                .sameSite("none")
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
