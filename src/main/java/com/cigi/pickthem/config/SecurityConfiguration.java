@@ -56,7 +56,7 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.setAllowedOrigins(
-                List.of("https://can-pick-them.vercel.app")
+                List.of("https://pick-them-chi.vercel.app")
         );
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
