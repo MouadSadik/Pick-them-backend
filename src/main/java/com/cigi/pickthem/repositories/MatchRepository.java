@@ -15,22 +15,25 @@ import java.util.List;
 public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
 
     @Query("""
-    SELECT new com.cigi.pickthem.domain.dtos.match.MatchWithPredectionResponse(
-        m.id,
-        p.predictedScoreA,
-        p.predictedScoreB,
-        m.teamA,
-        m.teamB,
-        m.pointsWinA,
-        m.pointsWinB,
-        m.pointsDraw,
-        m.scoreA,
-        m.scoreB,
-        t.name
-    )
-    FROM MatchEntity m
-    LEFT JOIN m.predictions p ON p.user.id = :userId
-    JOIN m.tour t
+SELECT new com.cigi.pickthem.domain.dtos.match.MatchWithPredectionResponse(
+    m.id,
+    p.predictedScoreA,
+    p.predictedScoreB,
+    m.teamA,
+    m.teamB,
+    m.pointsWinA,
+    m.pointsWinB,
+    m.pointsDraw,
+    m.scoreA,
+    m.scoreB,
+    t.name
+)
+FROM MatchEntity m
+JOIN m.predictions p
+JOIN m.tour t
+WHERE p.user.id = :userId
+  AND p.predictedScoreA IS NOT NULL
+  AND p.predictedScoreB IS NOT NULL
 """)
     List<MatchWithPredectionResponse> findMatchesWithPredictionsByUser(
             @Param("userId") Long userId
