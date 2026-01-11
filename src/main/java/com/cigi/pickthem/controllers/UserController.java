@@ -4,6 +4,7 @@ import com.cigi.pickthem.domain.dtos.users.UserResponseDto;
 import com.cigi.pickthem.domain.dtos.users.UserUpdateRequestDto;
 import com.cigi.pickthem.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class UserController {
 
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponseDto> deleteUser(
             @PathVariable("id") Long userId
     ) {

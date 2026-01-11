@@ -7,12 +7,11 @@ import com.cigi.pickthem.domain.entities.PredictionEntity;
 import com.cigi.pickthem.domain.entities.UserEntity;
 import com.cigi.pickthem.domain.enums.Role;
 import com.cigi.pickthem.exception.NotFoundException;
-import com.cigi.pickthem.mappers.impl.UserMapper;
+import com.cigi.pickthem.mappers.UserMapper;
 import com.cigi.pickthem.repositories.PredictionRepository;
 import com.cigi.pickthem.repositories.UserRepository;
 import com.cigi.pickthem.services.UserService;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,27 +33,6 @@ public class UserServiceImpl implements UserService {
         this.predictionRepository = predictionRepository;
         this.cloudinaryService = cloudinaryService;
     }
-
-//    @Override
-//    @Transactional
-//    public UserResponseDto updateUser(Long userId, UserUpdateRequestDto requestDto) {
-//        return userRepository.findById(userId)
-//                .map(user -> {
-//                    // verify that email is not used befor
-//                    // if (userRepository.existsByEmailAndIdNot(requestDto.getEmail(), userId)) {
-//                    // throw new IllegalArgumentException("Email Used Before");
-//                    // }
-//
-//                    // update username and email
-//                    user.setName(requestDto.getName());
-//                    // user.setEmail(requestDto.getEmail());
-//
-//                    UserEntity updatedUser = userRepository.save(user);
-//
-//                    return userMapper.toDto(updatedUser);
-//                })
-//                .orElseThrow(() -> new RuntimeException("User Not Found with id " + userId));
-//    }
 
     @Override
     @Transactional
@@ -139,14 +117,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDto(user);
     }
 
-//    @Override
-//    public List<UserResponseDto> getTopUsers(int limit) {
-//        return userRepository.findAll(Sort.by(Sort.Direction.DESC, "totalPoints"))
-//                .stream()
-//                .limit(limit)
-//                .map(userMapper::toDto)
-//                .collect(Collectors.toList());
-//    }
 
     public List<UserResponseDto> getTopUsers(int limit) {
         // Fetch users with role USER only, ordered by points descending

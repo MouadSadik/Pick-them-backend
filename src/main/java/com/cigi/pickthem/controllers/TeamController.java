@@ -7,6 +7,7 @@ import com.cigi.pickthem.services.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +31,7 @@ public class TeamController {
             value = "/create",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeamDTO> createTeam(
             @RequestParam("name") String name,
             @RequestParam(value = "file", required = false) MultipartFile file) {
@@ -59,6 +61,7 @@ public class TeamController {
             value = "/update/{id}",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeamDTO> updateTeam(
             @PathVariable Long id,
             @RequestParam("name") String name,
@@ -84,6 +87,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteTeam(@PathVariable Long id) {
         boolean deleted = teamService.deleteTeam(id);
         return deleted

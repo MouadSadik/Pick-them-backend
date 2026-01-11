@@ -40,10 +40,18 @@ public class UserEntity implements UserDetails {
     private String imageUrl; // URL retournée par Cloudinary
     private String imagePublicId; // ID Cloudinary pour suppression
 
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return List.of(new SimpleGrantedAuthority(role.name()));
+//    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(
+                new SimpleGrantedAuthority("ROLE_" + role.name())
+        );
     }
+
 
     @Override
     public String getPassword() {

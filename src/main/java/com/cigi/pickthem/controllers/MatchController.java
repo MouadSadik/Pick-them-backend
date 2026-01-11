@@ -8,6 +8,7 @@ import com.cigi.pickthem.services.MatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class MatchController {
     private final MatchService matchService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MatchDTO> createMatch(
             @RequestBody CreateMatchRequest request
     ) {
@@ -42,6 +44,7 @@ public class MatchController {
     }
 
     @PutMapping("/{id}/result")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MatchDTO> enterResult(
             @PathVariable("id") Long matchId,
             @RequestBody EnterResultRequest request
@@ -51,6 +54,7 @@ public class MatchController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteMatch(@PathVariable Long id) {
         matchService.deleteMatch(id);
         return ResponseEntity.noContent().build();

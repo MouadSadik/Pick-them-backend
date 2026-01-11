@@ -32,7 +32,6 @@ public class MatchServiceImpl implements MatchService {
     private final TourRepository tourRepository;
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public MatchDTO createMatch(
             Long teamAId,
             Long teamBId,
@@ -71,7 +70,6 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public MatchDTO enterResult(Long matchId, int scoreA, int scoreB) {
         MatchEntity match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new NotFoundException("Match not found"));
@@ -92,7 +90,6 @@ public class MatchServiceImpl implements MatchService {
 
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public void deleteMatch(Long matchId) {
         MatchEntity match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new NotFoundException("Match does not found"));
@@ -101,7 +98,6 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public MatchDTO updateMatch(Long matchId, Long teamAId, Long teamBId, int pointsWinA, int pointsWinB, int pointsDraw) {
         if(teamAId.equals(teamBId)) {
             throw new RuntimeException("Team A and Team B must be different");

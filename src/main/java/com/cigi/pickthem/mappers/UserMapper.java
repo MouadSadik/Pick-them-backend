@@ -1,4 +1,4 @@
-package com.cigi.pickthem.mappers.impl;
+package com.cigi.pickthem.mappers;
 
 import com.cigi.pickthem.domain.dtos.users.UserRequestDto;
 import com.cigi.pickthem.domain.dtos.users.UserResponseDto;
