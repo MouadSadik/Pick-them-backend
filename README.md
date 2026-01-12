@@ -103,14 +103,12 @@ http://localhost:8081/swagger-ui.html
 
 ## ⚙️ Configuration
 
-### Database Configuration (`application.yml`)
+### Database Configuration (`application.properties`)
 
 ```yaml
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/pickthem
-    username: postgres
-    password: password
+spring-datasource-url: jdbc:postgresql://localhost:5432/pickthem
+spring-datasource-username: postgres
+spring-datasource-password: password
 ```
 
 ---
@@ -149,7 +147,7 @@ http://localhost:8081
 
 ## 👨‍💻 Author
 
-Developed by **Mouad Sadik, Badr Ziane Khalil Baidouri and Ibrahim Ait Kadiss**
+Developed by **Mouad Sadik, Badr Ziane, Khalil Baidouri and Ibrahim Ait Kadiss**
 
 ---
 
