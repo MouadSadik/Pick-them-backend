@@ -5,16 +5,11 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-//charger automatiquement from .env
-
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix = "cloudinary")
-public class CloudinaryProperties {
-
-    private String cloudName;
-    private String apiKey;
-    private String apiSecret;
+@ConfigurationProperties(prefix = "jwt")
+public class JwtProperties {
+    private String secret;
 }
 

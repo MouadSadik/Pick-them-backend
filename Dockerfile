@@ -16,3 +16,7 @@ COPY --from=builder /app/target/*.jar app.jar
 
 EXPOSE 8081
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+
+#first step : compile with maven
+#second : execute .jar

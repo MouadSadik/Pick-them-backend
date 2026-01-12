@@ -25,7 +25,7 @@ public class UserEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String name; // anciennement username
+    private String name;
 
     @Column(unique = true)
     private String email;
@@ -39,11 +39,6 @@ public class UserEntity implements UserDetails {
 
     private String imageUrl; // URL retournée par Cloudinary
     private String imagePublicId; // ID Cloudinary pour suppression
-
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return List.of(new SimpleGrantedAuthority(role.name()));
-//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

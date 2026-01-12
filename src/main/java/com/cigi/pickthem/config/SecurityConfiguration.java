@@ -24,11 +24,12 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
+    //Les regles de securites
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()) //car il n’y a pas de session serveur
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**",
                                 "/swagger-ui/**",
@@ -38,9 +39,8 @@ public class SecurityConfiguration {
 //                                "/api/v1/tours"
                         )
                                 .permitAll()
-                                .requestMatchers("/api/v1/teams/create").permitAll()
+//                                .requestMatchers("/api/v1/teams/create").permitAll()
                                 .requestMatchers("api/v1/health").permitAll()
-//                        .requestMatchers("/api/v1/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
@@ -63,7 +63,7 @@ public class SecurityConfiguration {
         );
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(true); //Autorise l’envoi des cookies ou tokens
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
