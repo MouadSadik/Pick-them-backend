@@ -1,30 +1,28 @@
 package com.cigi.pickthem.domain.entities;
 
-import com.cigi.pickthem.domain.enums.TourStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "tours")
-public class TourEntity {
+@Table(name = "events")
+public class EventEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private TourStatus status;
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TourEntity> tours;
 
-    @ManyToOne
-    @JoinColumn(name = "event_id")
-    private EventEntity event;
 
 }

@@ -1,11 +1,13 @@
 package com.cigi.pickthem.services.impl;
 
 import com.cigi.pickthem.domain.dtos.TourDto;
+import com.cigi.pickthem.domain.entities.EventEntity;
 import com.cigi.pickthem.domain.entities.TourEntity;
 import com.cigi.pickthem.domain.enums.TourStatus;
 import com.cigi.pickthem.exception.ConflictException;
 import com.cigi.pickthem.exception.NotFoundException; // Ton exception perso
 import com.cigi.pickthem.mappers.TourMapper;
+import com.cigi.pickthem.repositories.EventRepository;
 import com.cigi.pickthem.repositories.TourRepository;
 import com.cigi.pickthem.services.TourService;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +24,19 @@ public class TourServiceImpl implements TourService {
 
     private final TourRepository tourRepository;
     private final TourMapper tourMapper;
+    private final EventRepository eventRepository;
 
-    @Override
     public TourDto createTour(TourDto tourDto) {
-        // 1. Validation métier : Unicité du nom
         if (tourRepository.existsByName(tourDto.getName())) {
             throw new ConflictException("Tour with name '" + tourDto.getName() + "' already existed.");
         }
 
         TourEntity tourEntity = tourMapper.toEntity(tourDto);
+
+        EventEntity event = eventRepository.findById(tourDto.getIdEvent())
+                .orElseThrow(() -> new NotFoundException("Event with id '" + tourDto.getIdEvent() + "' not found."));
+        tourEntity.setEvent(event);
+
         TourEntity savedTour = tourRepository.save(tourEntity);
         return tourMapper.toDto(savedTour);
     }
