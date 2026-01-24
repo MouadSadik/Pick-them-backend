@@ -31,7 +31,8 @@ public class MatchController {
                 request.getPointsWinA(),
                 request.getPointsWinB(),
                 request.getPointsDraw(),
-                request.getTourId()
+                request.getTourId(),
+                request.getEventId()
         );
 
         return new ResponseEntity<>(match, HttpStatus.CREATED);

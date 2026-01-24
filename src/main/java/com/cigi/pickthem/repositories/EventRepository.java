@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  **/
 public interface EventRepository extends JpaRepository<EventEntity, Long> {
     boolean existsByName(String name);
+    //boolean existsByNameAndEventId(String name, Long eventId);
+
 }

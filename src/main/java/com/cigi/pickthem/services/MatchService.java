@@ -9,7 +9,7 @@ import java.util.List;
  * @author $ {USERS}
  **/
 public interface MatchService {
-     MatchDTO createMatch(Long teamAId, Long teamBId, int pointsWinA, int pointsWinB, int pointsDraw, Long tourId);
+     MatchDTO createMatch(Long teamAId, Long teamBId, int pointsWinA, int pointsWinB, int pointsDraw, Long tourId, Long eventId);
      MatchDTO enterResult(Long matchId, int scoreA, int scoreB);
      void deleteMatch(Long matchId);
      MatchDTO updateMatch(Long matchId, Long teamAId, Long teamBId, int pointsWinA, int pointsWinB, int pointsDraw);

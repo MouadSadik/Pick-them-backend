@@ -7,6 +7,7 @@ import com.cigi.pickthem.domain.entities.TourEntity;
 import com.cigi.pickthem.exception.ConflictException;
 import com.cigi.pickthem.exception.NotFoundException;
 import com.cigi.pickthem.mappers.EventMapper;
+import com.cigi.pickthem.mappers.TourMapperImpl;
 import com.cigi.pickthem.repositories.EventRepository;
 import com.cigi.pickthem.repositories.TourRepository;
 import com.cigi.pickthem.services.EventService;
@@ -27,31 +28,53 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
+    private final TourRepository tourRepository;
+    private final TourMapperImpl tourMapperImpl;
+    private final CloudinaryService cloudinaryService;
 
     @Override
     public EventDto createEvent(EventDto eventDto) {
         if (eventRepository.existsByName(eventDto.getName())) {
-            throw new ConflictException("Tour with name '" + eventDto.getName() + "' already existed.");
-        }
-        EventEntity eventEntity = eventMapper.toEntity(eventDto);
-        EventEntity savedTour = eventRepository.save(eventEntity);
-        return eventMapper.toDto(savedTour);    }
-
-    @Override
-    public EventDto updateEvent(Long id, EventDto eventDto) {
-        EventEntity existingEvent = eventRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Event not found"));
-
-        // Validation métier pour l'update :
-        // Si le nom change, on vérifie que le nouveau nom n'est pas déjà pris par quelqu'un d'autre
-        if (!existingEvent.getName().equals(eventDto.getName()) && eventRepository.existsByName(eventDto.getName())) {
             throw new ConflictException("Event with name '" + eventDto.getName() + "' already existed.");
         }
+        EventEntity eventEntity = eventMapper.toEntity(eventDto);
+        EventEntity savedevent = eventRepository.save(eventEntity);
+        return eventMapper.toDto(savedevent);
+    }
 
-        existingEvent.setName(eventDto.getName());
+    @Override
+    public EventDto updateEvent(Long eventId, EventDto eventDto) throws Exception {
 
-        EventEntity updatedEvent = eventRepository.save(existingEvent);
-        return eventMapper.toDto(updatedEvent);    }
+        EventEntity event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Event not found"));
+
+        // Vérifier l’unicité du nom (si modifié)
+        if (!event.getName().equals(eventDto.getName())
+                && eventRepository.existsByName(eventDto.getName())) {
+            throw new ConflictException(
+                    "Event with name '" + eventDto.getName() + "' already exists."
+            );
+        }
+
+        // Mise à jour du nom
+        event.setName(eventDto.getName());
+
+        // Mise à jour de l’image si fournie
+        if (eventDto.getImageUrl() != null) {
+
+            // Supprimer l’ancienne image Cloudinary
+            if (event.getCloudinaryPublicId() != null) {
+                cloudinaryService.deleteImage(event.getCloudinaryPublicId());
+            }
+
+            event.setImageUrl(eventDto.getImageUrl());
+            event.setCloudinaryPublicId(eventDto.getCloudinaryPublicId());
+        }
+
+        EventEntity updatedEvent = eventRepository.save(event);
+        return eventMapper.toDto(updatedEvent);
+    }
+
 
     @Override
     public List<EventDto> getAllTours() {
@@ -72,4 +95,14 @@ public class EventServiceImpl implements EventService {
         }
         eventRepository.deleteById(id);
     }
+
+    @Override
+    public List<TourDto> getTourByEvent(Long eventId) {
+        EventEntity event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Event not found"));
+
+        return tourRepository.findByEventId(eventId)
+                .stream()
+                .map(tourMapperImpl::toDto)
+                .toList();    }
 }

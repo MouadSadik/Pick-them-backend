@@ -20,5 +20,7 @@ public class EventDto {
     @NotBlank(message = "Le nom du tour est obligatoire")
     @Size(min = 3, max = 50, message = "Le nom doit contenir entre 3 et 50 caractères")
     private String name;
+    private String imageUrl;
+    private String cloudinaryPublicId;
 
 }

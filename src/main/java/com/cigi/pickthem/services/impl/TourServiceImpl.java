@@ -10,6 +10,7 @@ import com.cigi.pickthem.mappers.TourMapper;
 import com.cigi.pickthem.repositories.EventRepository;
 import com.cigi.pickthem.repositories.TourRepository;
 import com.cigi.pickthem.services.TourService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -26,20 +27,34 @@ public class TourServiceImpl implements TourService {
     private final TourMapper tourMapper;
     private final EventRepository eventRepository;
 
+    @Transactional
     public TourDto createTour(TourDto tourDto) {
-        if (tourRepository.existsByName(tourDto.getName())) {
-            throw new ConflictException("Tour with name '" + tourDto.getName() + "' already existed.");
+
+        if (tourRepository.existsByNameAndEvent_Id(
+                tourDto.getName(),
+                tourDto.getIdEvent()
+        )) {
+            throw new ConflictException(
+                    "Tour with name '" + tourDto.getName() +
+                            "' already exists for this event."
+            );
         }
 
         TourEntity tourEntity = tourMapper.toEntity(tourDto);
 
         EventEntity event = eventRepository.findById(tourDto.getIdEvent())
-                .orElseThrow(() -> new NotFoundException("Event with id '" + tourDto.getIdEvent() + "' not found."));
+                .orElseThrow(() ->
+                        new NotFoundException(
+                                "Event with id '" + tourDto.getIdEvent() + "' not found."
+                        )
+                );
+
         tourEntity.setEvent(event);
 
         TourEntity savedTour = tourRepository.save(tourEntity);
         return tourMapper.toDto(savedTour);
     }
+
 
     @Override
     public TourDto updateTour(Long id, TourDto tourDto) {

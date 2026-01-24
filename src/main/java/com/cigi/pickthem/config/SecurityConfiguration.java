@@ -59,7 +59,7 @@ public class SecurityConfiguration {
         configuration.setAllowCredentials(true);
         configuration.setAllowedOrigins(
                 List.of("https://pick-them-chi.vercel.app",
-                        "http://localhost:3000")
+                        "http://localhost:3000","http://localhost:3001")
         );
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

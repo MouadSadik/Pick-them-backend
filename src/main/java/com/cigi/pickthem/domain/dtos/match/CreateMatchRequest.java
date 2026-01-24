@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class CreateMatchRequest {
 
+    private  Long eventId;
     private Long teamAId;
     private Long teamBId;
 

@@ -38,7 +38,8 @@ public class MatchServiceImpl implements MatchService {
             int pointsWinA,
             int pointsWinB,
             int pointsDraw,
-            Long tourId
+            Long tourId,
+            Long eventId
     ) {
 
         if (teamAId.equals(teamBId)) {

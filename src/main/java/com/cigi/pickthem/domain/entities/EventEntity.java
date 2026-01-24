@@ -23,6 +23,9 @@ public class EventEntity {
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TourEntity> tours;
+    private String imageUrl;
+
+    private String cloudinaryPublicId;
 
 
 }
