@@ -7,6 +7,7 @@ import com.cigi.pickthem.domain.dtos.auth.RefreshResponse;
 import com.cigi.pickthem.domain.dtos.auth.RegisterRequest;
 import com.cigi.pickthem.domain.dtos.auth.RegisterResponse;
 import com.cigi.pickthem.domain.entities.UserEntity;
+import com.cigi.pickthem.domain.enums.Role;
 import com.cigi.pickthem.exception.BadRequestException;
 import com.cigi.pickthem.exception.ConflictException;
 import com.cigi.pickthem.exception.NotFoundException;
@@ -39,7 +40,7 @@ public class AuthenticationService {
                                 .name(request.getName())
                                 .email(request.getEmail())
                                 .password(passwordEncoder.encode(request.getPassword()))
-                                .role(request.getRole())
+                                .role(Role.USER)
                                 .build();
 
                 userRepository.save(user);
